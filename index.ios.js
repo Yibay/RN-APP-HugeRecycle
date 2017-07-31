@@ -4,18 +4,11 @@
  * @flow
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import { AppRegistry } from 'react-native';
 
-import RecycleList from './app/components/RecycleList/index';
-
-export default class HugeRecycle extends Component {
-  render() {
-    return (
-      <RecycleList></RecycleList>
-    );
-  }
-}
+import Menu from './app/components/Menu/index';
 
 
-AppRegistry.registerComponent('HugeRecycle', () => HugeRecycle);
+// 将入口 组件 挂载到 app入口
+AppRegistry.registerComponent('HugeRecycle', () => Menu);
