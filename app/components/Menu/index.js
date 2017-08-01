@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Image, ScrollView } from 'react-native';
 
 import { DrawerNavigator, DrawerItems } from 'react-navigation';
 
-import RecycleList from '../RecycleList/index';
+import RecycleListPage from '../RecycleList/index';
 import MyOrder from '../MyOrder/index';
 
 
@@ -11,7 +11,7 @@ import MyOrder from '../MyOrder/index';
 const Menu = DrawerNavigator(
 	{
 		// 默认 显示的 主页面 组件
-		'虎哥回收': { screen: RecycleList },
+		'虎哥回收': { screen: RecycleListPage },
 		'我的订单': { screen: MyOrder }
 	},
 	{

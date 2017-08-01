@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Image, ListView } from 'react-native';
+import { StyleSheet, View, Text, Image, ListView, TouchableHighlight } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import { StackNavigator } from 'react-navigation';
 
+
+import Header from './header'
 import Sorting from '../Sorting/index';
+
 
 let data = {
 	"data": [
@@ -40,6 +44,8 @@ let data = {
 	]
 };
 
+
+// RecycleList 组件
 class RecycleList extends Component {
 
 	// DrawerNavigator 导航 设置
@@ -66,12 +72,15 @@ class RecycleList extends Component {
 	}
 
 	render() {
+		console.log(this.props);
 		return (
-			<ListView style={styles.container}
-				dataSource={this.state.dataSource}
-				renderHeader={this._renderHeader.bind(this)}
-				renderRow={this._renderRow}>
-			</ListView>
+			<View style={styles.container}>
+				<Header navigation={this.props.navigation} />
+				<ListView style={styles.list}
+					dataSource={this.state.dataSource}
+					renderRow={this._renderRow.bind(this)}>
+				</ListView>
+			</View>
 		)
 	}
 
@@ -79,53 +88,37 @@ class RecycleList extends Component {
 	// 	this.props.navigation.navigate('DrawerOpen');
 	// }
 
-	_renderHeader() {
-		return(
-			<View style={styles.header}>
-				<Icon name="md-menu" size={30} onPress={this._callMenu.bind(this)}/>
-				<Text style={styles.headerText}>虎哥回收</Text>
-				<Icon name="md-call" size={30} />
-			</View>
-		)
-	}
-
 	_renderRow(row) {
 		return (
-			<View style={styles.row}>
-				<Image style={styles.rowImg} source={{uri: row.thumb}} />
-				<View style={styles.rowMsg}>
-					<Text style={styles.rowTitle} numberOfLines={1}>{row.title}</Text>
-					<Text style={styles.rowDesc} numberOfLines={1}>{row.desc}</Text>
+			<TouchableHighlight onPress={this._goSortingPage.bind(this)}>
+				<View style={styles.row}>
+					<Image style={styles.rowImg} source={{uri: row.thumb}} />
+					<View style={styles.rowMsg}>
+						<Text style={styles.rowTitle} numberOfLines={1}>{row.title}</Text>
+						<Text style={styles.rowDesc} numberOfLines={1}>{row.desc}</Text>
+					</View>
 				</View>
-			</View>
+			</TouchableHighlight>
 		)
 	}
 
-	// 调出 左边栏 菜单
-	_callMenu(){
-		this.props.navigation.navigate('DrawerOpen');
+	_goSortingPage(){
+		this.props.navigation.navigate('Sorting', {name: 'Lucy'});
 	}
+
+	
 }
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1
 	},
-	header: {
-		paddingTop: 25,
-		paddingBottom: 5,
-		paddingLeft: 12,
-		paddingRight: 12,
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		backgroundColor: '#ffcf31'
-	},
-	headerText: {
-		fontSize: 20
+	list: {
+		flex: 1
 	},
 	row: {
-		flexDirection: 'row'
+		flexDirection: 'row',
+		backgroundColor: '#fff'
 	},
 	rowImg: {
 		marginLeft: 20,
@@ -145,7 +138,7 @@ const styles = StyleSheet.create({
 	rowTitle: {
 		marginBottom: 10,
 		fontSize: 18,
-		fontWeight: '700',
+		fontWeight: '700'
 	},
 	rowDesc: {
 		fontSize: 14,
@@ -156,7 +149,17 @@ const styles = StyleSheet.create({
 	icon: {
 	    width: 24,
 	    height: 24,
-	  },
+	},
 });
 
-export default RecycleList;
+const RecycleListPage = StackNavigator(
+	{
+		List: { screen: RecycleList },
+		Sorting: { screen: Sorting },
+	},
+	{
+		headerMode: 'none'
+	}
+);
+
+export default RecycleListPage;
