@@ -13,42 +13,6 @@ import config from '../../common/config';
 import { createRecycleListData } from '../../common/tools';
 
 
-let data = {
-	"data": [
-		{
-			"thumb": "http://facebook.github.io/react/img/logo_og.png","title": "电视","desc": "CRT 14-24寸 CRT 25寸及以上 液晶 14-123123123123123123"
-		},
-		{
-			"thumb": "http://dummyimage.com/50x50/19e671","title": "空调","desc": "窗式 壁柜 柜式 吸顶"
-		},
-		{
-			"thumb": "http://dummyimage.com/50x50/as22ff","title": "冰箱","desc": "50-120升 120-220升 220升以上 冰柜"
-		},
-		{
-			"thumb": "http://dummyimage.com/50x50/e67119","title": "电脑","desc": "主机 显示器 笔记本"
-		},
-		{
-			"thumb": "http://dummyimage.com/50x50/7119e6","title": "洗衣机","desc": "单缸 双缸 全自动 滚筒"
-		},
-		{
-			"thumb": "http://dummyimage.com/50x50/71e619","title": "一体机","desc": "大型一体机"
-		},
-		{
-			"thumb": "http://dummyimage.com/50x50/9e6711","title": "衣服","desc": "春装 夏装 秋装 冬装 童装"
-		},
-		{
-			"thumb": "http://dummyimage.com/50x50/119e67","title": "床单被褥","desc": "床单被褥"
-		},
-		{
-			"thumb": "http://dummyimage.com/50x50/67119e","title": "可回收垃圾","desc": "可回收垃圾"
-		},
-		{
-			"thumb": "http://dummyimage.com/50x50/9e1167","title": "废旧家具","desc": "沙发 床垫 床 桌子 椅子 柜子"
-		}
-	]
-};
-
-
 // RecycleList 组件
 class RecycleList extends Component {
 
@@ -71,7 +35,7 @@ class RecycleList extends Component {
 		});
 
 		this.state = {
-			dataSource: ds.cloneWithRows(data.data)
+			dataSource: ds.cloneWithRows([])
 		}
 	}
 
@@ -82,7 +46,8 @@ class RecycleList extends Component {
 				<Header navigation={this.props.navigation} />
 				<ListView style={styles.list}
 					dataSource={this.state.dataSource}
-					renderRow={this._renderRow.bind(this)}>
+					renderRow={this._renderRow.bind(this)}
+					enableEmptySections={true}>
 				</ListView>
 			</View>
 		)
@@ -91,16 +56,23 @@ class RecycleList extends Component {
 	componentDidMount() {
 		// this.props.navigation.navigate('DrawerOpen');
 		request.get(config.api.base + config.api.getProducts)
-			.then((data) => {createRecycleListData(data)})
+			.then((data) => { 
+				let row = createRecycleListData(data);
+				this.setState({
+					dataSource: this.state.dataSource.cloneWithRows(row)
+				});
+				console.log(data);
+				console.log(row);
+			})
 	}
 
 	_renderRow(row) {
 		return (
 			<TouchableHighlight onPress={this._goSortingPage.bind(this)}>
 				<View style={styles.row}>
-					<Image style={styles.rowImg} source={{uri: row.thumb}} />
+					<Image style={styles.rowImg} source={{uri: config.static.base + row.image}} />
 					<View style={styles.rowMsg}>
-						<Text style={styles.rowTitle} numberOfLines={1}>{row.title}</Text>
+						<Text style={styles.rowTitle} numberOfLines={1}>{row.name}</Text>
 						<Text style={styles.rowDesc} numberOfLines={1}>{row.desc}</Text>
 					</View>
 				</View>
