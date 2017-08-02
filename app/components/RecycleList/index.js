@@ -8,6 +8,10 @@ import { StackNavigator } from 'react-navigation';
 import Header from './header'
 import Sorting from '../Sorting/index';
 
+import request from '../../common/request';
+import config from '../../common/config';
+import { createRecycleListData } from '../../common/tools';
+
 
 let data = {
 	"data": [
@@ -84,9 +88,11 @@ class RecycleList extends Component {
 		)
 	}
 
-	// componentDidMount() {
-	// 	this.props.navigation.navigate('DrawerOpen');
-	// }
+	componentDidMount() {
+		// this.props.navigation.navigate('DrawerOpen');
+		request.get(config.api.base + config.api.getProducts)
+			.then((data) => {createRecycleListData(data)})
+	}
 
 	_renderRow(row) {
 		return (
