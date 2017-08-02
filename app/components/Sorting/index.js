@@ -9,14 +9,21 @@ import Content from './content';
 
 
 class Sorting extends Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			selectId: this.props.navigation.state.params.selectId
+		}
+	}
+
 	render() {
-		console.log(this.props);
 		return (
 			<View style={styles.container}>
 				<Header navigation={this.props.navigation} />
 				<View style={styles.main}>
-					<Nav style={styles.nav} />
-					<Content style={styles.content} />
+					<Nav style={styles.nav} recycleList={this.props.navigation.state.params.recycleList} selectId={this.state.selectId} />
+					<Content style={styles.content} recycleList={this.props.navigation.state.params.recycleList} selectId={this.state.selectId} />
 				</View>
 				<Footer />
 			</View>
@@ -34,7 +41,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row'
 	},
 	nav: {
-		width: 'auto'
+		// width: 'auto'
 	},
 	content: {
 		flex: 1

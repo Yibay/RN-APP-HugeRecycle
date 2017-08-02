@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 		paddingLeft: 12,
 		paddingRight: 12,
 		alignItems: 'center',
-		backgroundColor: '#ffcf31'
+		backgroundColor: '#fff'
 	},
 	back: {
 		position: 'absolute',

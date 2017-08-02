@@ -35,12 +35,12 @@ class RecycleList extends Component {
 		});
 
 		this.state = {
-			dataSource: ds.cloneWithRows([])
+			dataSource: ds.cloneWithRows([]),
+			recycleList: []
 		}
 	}
 
 	render() {
-		console.log(this.props);
 		return (
 			<View style={styles.container}>
 				<Header navigation={this.props.navigation} />
@@ -59,16 +59,15 @@ class RecycleList extends Component {
 			.then((data) => { 
 				let row = createRecycleListData(data);
 				this.setState({
-					dataSource: this.state.dataSource.cloneWithRows(row)
+					dataSource: this.state.dataSource.cloneWithRows(row),
+					recycleList: row
 				});
-				console.log(data);
-				console.log(row);
 			})
 	}
 
 	_renderRow(row) {
 		return (
-			<TouchableHighlight onPress={this._goSortingPage.bind(this)}>
+			<TouchableHighlight onPress={() => this._goSortingPage.bind(this)(row.id)}>
 				<View style={styles.row}>
 					<Image style={styles.rowImg} source={{uri: config.static.base + row.image}} />
 					<View style={styles.rowMsg}>
@@ -80,8 +79,11 @@ class RecycleList extends Component {
 		)
 	}
 
-	_goSortingPage(){
-		this.props.navigation.navigate('Sorting', {name: 'Lucy'});
+	_goSortingPage(id){
+		this.props.navigation.navigate('Sorting', {
+			recycleList: this.state.recycleList, 
+			selectId: id
+		});
 	}
 
 	
