@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Dimensions, View, Text, ScrollView } from 'react-native';
+import { StyleSheet, Dimensions, View, Text, ScrollView, TouchableOpacity } from 'react-native';
 
 
 var width = Dimensions.get('window').width;
@@ -11,10 +11,12 @@ class Nav extends Component {
 				<ScrollView>
 					{
 						this.props.recycleList.map((item) => (
-							<View key={item.id} style={[styles.navLi, this.props.selectId == item.id ? styles.navLiSelected : null]}>
-								<Text style={styles.navLiText}>{item.name}</Text>
-								<View style={this.props.selectId == item.id ? styles.navLiBorderSelected : null}></View>
-							</View>)
+							<TouchableOpacity key={item.id} onPress={() => this.props.changeSelectId(item.id)}>
+								<View style={[styles.navLi, this.props.selectId == item.id ? styles.navLiSelected : null]}>
+									<Text style={styles.navLiText}>{item.name}</Text>
+									<View style={this.props.selectId == item.id ? styles.navLiBorderSelected : null}></View>
+								</View>
+							</TouchableOpacity>)
 						)
 					}
 					

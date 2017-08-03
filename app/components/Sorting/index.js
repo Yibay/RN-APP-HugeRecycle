@@ -22,12 +22,19 @@ class Sorting extends Component {
 			<View style={styles.container}>
 				<Header navigation={this.props.navigation} />
 				<View style={styles.main}>
-					<Nav style={styles.nav} recycleList={this.props.navigation.state.params.recycleList} selectId={this.state.selectId} />
+					<Nav style={styles.nav} recycleList={this.props.navigation.state.params.recycleList} selectId={this.state.selectId}
+						changeSelectId={this._changeSelectId.bind(this)} />
 					<Content style={styles.content} recycleList={this.props.navigation.state.params.recycleList} selectId={this.state.selectId} />
 				</View>
 				<Footer />
 			</View>
 		)
+	}
+
+	_changeSelectId(id) {
+		this.setState({
+			selectId: id
+		})
 	}
 
 }
