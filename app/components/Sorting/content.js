@@ -1,25 +1,34 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Image, ScrollView } from 'react-native';
 
 
 import Row from './row';
+import OtherMsg from './otherMsg';
+
+import config from '../../common/config';
 
 
 class Content extends Component {
 	render() {
+		console.log(this.props);
 		return (
-			<View style={styles.container}>
+			<ScrollView style={styles.container}>
 				<Text style={styles.add}>添加到回收栏</Text>
 				{
 					this.props.recycleList
 						// 筛选 选中的分类
-						.filter(item => item.id == this.props.selectId)
+						.filter(item => item.id === this.props.selectId)
 						// 获取 子分类
 						.map(item => item.specs)[0]
 						// 生成 子分类 模板
-						.map(item => <Row key={item.id} goods={item} />)
+						.map((item, index) => <Row key={item.id} goods={item} index={index} />)
 				}
-			</View>
+				{
+					this.props.recycleList
+						.filter(item => item.id === this.props.selectId)
+						.map(item => <OtherMsg key={item.id} goods={item} />)
+				}
+			</ScrollView>
 		)
 	}
 }

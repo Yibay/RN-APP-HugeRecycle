@@ -7,11 +7,10 @@ import config from '../../common/config';
 
 class Row extends Component {
 	render() {
-		console.log(this.props);
 		return (
 			<View style={styles.container}>
 				<Image style={styles.img} source={{uri: config.static.base + this.props.goods.image}} />
-				<View style={styles.desc}>
+				<View style={[styles.desc, this.props.index === 0 ? styles.firstDesc : null]}>
 					<View style={styles.firstLine}>
 						<Text style={styles.name}>{this.props.goods.name}</Text>
 						<Text style={styles.price}>{this.props.goods.price + '元现金'}</Text>
@@ -36,8 +35,11 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		paddingRight: 5,
-		borderBottomWidth: 1,
-		borderBottomColor: '#e3e7ea'
+		borderTopWidth: 1,
+		borderTopColor: '#e3e7ea'
+	},
+	firstDesc: {
+		borderTopWidth: 0
 	},
 	firstLine: {
 		marginBottom: 8,
