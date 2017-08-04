@@ -10,10 +10,12 @@ import config from '../../common/config';
 
 class Content extends Component {
 	render() {
-		console.log(this.props);
+		let selectGood = this.props.recycleList.filter((item) => item.id === this.props.selectId)[0];
 		return (
 			<ScrollView style={styles.container}>
-				<Text style={styles.add}>添加到回收栏</Text>
+				<Text style={styles.add} onPress={() => {this.props.toggleRecycleGood(this.props.selectId, selectGood.name)}}>
+					{this.props.recycleGood.some(item => item.id === this.props.selectId) ? '取消回收' : '添加到回收栏'}
+				</Text>
 				{
 					this.props.recycleList
 						// 筛选 选中的分类

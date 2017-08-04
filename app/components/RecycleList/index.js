@@ -5,8 +5,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { StackNavigator } from 'react-navigation';
 
 
-import Header from './header'
 import Sorting from '../Sorting/index';
+import EditOrder from '../EditOrder/index';
+import Header from './header';
 
 import request from '../../common/request';
 import config from '../../common/config';
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
 	},
 	rowDesc: {
 		fontSize: 14,
-		color: '#bbbbbb',
+		color: '#bbb',
 		flexWrap: 'nowrap',
 		overflow: 'hidden'
 	},
@@ -137,6 +138,7 @@ const RecycleListPage = StackNavigator(
 	{
 		List: { screen: RecycleList },
 		Sorting: { screen: Sorting },
+		EditOrder: { screen: EditOrder }
 	},
 	{
 		headerMode: 'none'

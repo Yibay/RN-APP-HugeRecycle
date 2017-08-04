@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -10,7 +10,7 @@ class Header extends Component {
 		return(
 			<View style={styles.header}>
 				<Icon style={styles.back} name="md-arrow-back" size={30} onPress={this._goBack.bind(this)}/>
-				<Text style={styles.headerText}>物品分类</Text>
+				<Text style={styles.headerText}>{this.props.title}</Text>
 			</View>
 		)
 	}
@@ -41,5 +41,12 @@ const styles = StyleSheet.create({
 		fontSize: 20
 	}
 });
+
+Header.propTypes = {
+	title: PropTypes.string.isRequired,
+	navigation: PropTypes.shape({
+		goBack: PropTypes.func.isRequired
+	})
+};
 
 export default Header;

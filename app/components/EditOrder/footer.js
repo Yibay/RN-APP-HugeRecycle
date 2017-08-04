@@ -5,28 +5,15 @@ import { StyleSheet, View, Text, Alert } from 'react-native';
 class Footer extends Component {
 
 	render() {
-		console.log(this.props.recycleGood);
 		return(
 			<View style={styles.footer}>
-				<View style={styles.recycleGoodBox}>
-					{
-						this.props.recycleGood.map(item => <Text key={item.id} style={styles.good}>{item.name}</Text>)
-					}
-				</View>
-				<Text style={styles.text} onPress={this._call.bind(this)}>呼叫虎哥</Text>
+				<Text style={styles.text} onPress={this._call.bind(this)}>确认</Text>
 			</View>
 		)
 	}
 
 	_call() {
-		if(this.props.recycleGood.length > 0){
-			this.props.navigation.navigate('EditOrder', {
-				recycleGood: this.props.recycleGood
-			});
-		}
-		else {
-			Alert.alert('请先选择要回收的物品');
-		}
+		console.log('确认');
 	}
 
 }
@@ -42,16 +29,7 @@ const styles = StyleSheet.create({
 		borderColor: '#8c8c8c',
 		backgroundColor: '#fff',
 		flexDirection: 'row',
-		justifyContent: 'flex-end'
-	},
-	recycleGoodBox: {
-		flex: 1,
-		flexDirection: 'row',
-		alignItems: 'center',
-		flexWrap: 'wrap'
-	},
-	good: {
-		marginRight: 5
+		justifyContent: 'center'
 	},
 	text: {
 		paddingTop: 10,
