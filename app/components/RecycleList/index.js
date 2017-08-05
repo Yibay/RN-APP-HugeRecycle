@@ -7,6 +7,8 @@ import { StackNavigator } from 'react-navigation';
 
 import Sorting from '../Sorting/index';
 import EditOrder from '../EditOrder/index';
+import ManageAddress from '../ManageAddress/index';
+import EditAddress from '../EditAddress/index';
 import Header from './header';
 
 import request from '../../common/request';
@@ -138,7 +140,9 @@ const RecycleListPage = StackNavigator(
 	{
 		List: { screen: RecycleList },
 		Sorting: { screen: Sorting },
-		EditOrder: { screen: EditOrder }
+		EditOrder: { screen: EditOrder },
+		ManageAddress: { screen: ManageAddress },
+		EditAddress: { screen: EditAddress }
 	},
 	{
 		headerMode: 'none'

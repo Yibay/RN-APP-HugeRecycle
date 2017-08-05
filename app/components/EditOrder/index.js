@@ -26,7 +26,7 @@ class EditOrder extends Component {
 			<View style={styles.container}>
 				<Header title='订单编辑' navigation={this.props.navigation} />
 				<View style={styles.main}>
-					<Text style={styles.chooseAddress}>去选择地址</Text>
+					<Text style={styles.chooseAddress} onPress={() => this._goManageAddressPage()}>去选择地址</Text>
 					<View style={styles.recycleBox}>
 						<View style={styles.recycleTitle}>
 							<Icon name='recycle' size={22} color='#c7c7c7' />
@@ -83,6 +83,10 @@ class EditOrder extends Component {
 		this.setState({
 			remarks: this.state.remarks + ' ' + text
 		})
+	}
+
+	_goManageAddressPage(){
+		this.props.navigation.navigate('ManageAddress');
 	}
 }
 
