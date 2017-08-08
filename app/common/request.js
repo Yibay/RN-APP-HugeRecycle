@@ -15,16 +15,29 @@ request.get = function (url, params){
 		url += '?' + queryString.stringify(params);
 	}
 
+	console.log(config.header);
+
 	return fetch(url)
 		.then((response) => response.json())
 
 }
 
-request.post = function (url, body){
+request.post = function (url, body, header){
 
-	let options = _.extend(config.header, {
-		body: JSON.stringify(body)
-	});
+	// 防止 config 被污染，用一个新对象 继承 config.header
+	let options = _.extend({}, config.header);
+
+	if(body){
+		_.extend(options, {
+			body: JSON.stringify(body)
+		});
+	}
+
+	if(header){
+		_.extend(options.headers, header);
+	}
+
+	console.log(options);
 
 	return fetch(url, options)
 		.then((response) => response.json())

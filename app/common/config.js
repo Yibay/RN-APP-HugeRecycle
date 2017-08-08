@@ -1,7 +1,7 @@
 
 export default {
 	header: {
-		methode: 'POST',
+		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
@@ -9,7 +9,8 @@ export default {
 	},
 	api: {
 		base: 'http://test.hugehuge.cn/',
-		getProducts: 'api/mobile/normal/getProducts'
+		getProducts: 'api/mobile/normal/getProducts',
+		getCode: 'mobile/auth/requestSmsCode'
 	},
 	static: {
 		base: 'http://test.hugehuge.cn/web/'
