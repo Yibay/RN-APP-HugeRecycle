@@ -1,6 +1,5 @@
 // 封装 fetch请求 模块
 import queryString from 'query-string';
-import _ from 'lodash';
 
 
 import config from './config';
@@ -9,32 +8,43 @@ import config from './config';
 // 不然 其他模块 import 时，需要用 import * as request
 let request = {};
 
-request.get = function (url, params){
+request.get = function (url, params, header){
 
+	// 防止 config 被污染，用一个新对象 继承 config.getHeader
+	let options = Object.assign({}, config.getHeader);
+
+	// 设置 请求参数
 	if(params){
 		url += '?' + queryString.stringify(params);
 	}
 
-	console.log(config.header);
+	// 设置 Header头内 参数
+	if(header){
+		Object.assign(options.headers, header);
+	}
 
-	return fetch(url)
+	console.log(options);
+
+	return fetch(url, options)
 		.then((response) => response.json())
 
 }
 
 request.post = function (url, body, header){
 
-	// 防止 config 被污染，用一个新对象 继承 config.header
-	let options = _.extend({}, config.header);
+	// 防止 config 被污染，用一个新对象 继承 config.postHeader
+	let options = Object.assign({}, config.postHeader);
 
+	// 设置 body内 參数
 	if(body){
-		_.extend(options, {
+		Object.assign(options, {
 			body: JSON.stringify(body)
 		});
 	}
 
+	// 设置 Header头内 参数
 	if(header){
-		_.extend(options.headers, header);
+		Object.assign(options.headers, header);
 	}
 
 	console.log(options);

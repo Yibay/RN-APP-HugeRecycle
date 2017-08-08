@@ -12,7 +12,8 @@ class Signin extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			phone: ''
+			phone: '',
+			code: ''
 		}
 	}
 
@@ -24,12 +25,12 @@ class Signin extends Component {
 					<View>
 						<TextInput style={styles.tel} placeholder='请输入手机号' onChangeText={(text) => this._changeTel(text)} />
 						<View style={styles.codeBox}>
-							<TextInput style={styles.code} placeholder='请输入验证码' />
+							<TextInput style={styles.code} placeholder='请输入验证码' onChangeText={(text) => this._changeCode(text)} />
 							<Text style={styles.getCode} onPress={() => this._getCode()}>获取验证码</Text>
 						</View>
 					</View>
 					<View>
-						<Text style={styles.submit}>登录</Text>
+						<Text style={styles.submit} onPress={() => this._getToken()}>登录</Text>
 						<View style={styles.agreementBox}>
 							<Text style={styles.agree}>注册账号表示您已同意</Text>
 							<Text style={styles.agreement}>（虎哥回收用户协议）</Text>
@@ -47,8 +48,13 @@ class Signin extends Component {
 		});
 	}
 
+	_changeCode(text) {
+		this.setState({
+			code: text
+		});
+	}
+
 	_getCode() {
-		console.log(this.state.phone);
 		if(!this.state.phone || !this.state.phone.trim()){
 			return Alert.alert('请输入手机号');
 		}
@@ -59,7 +65,38 @@ class Signin extends Component {
 		request.post(config.api.base + config.api.getCode, { phone: this.state.phone })
 			.then((res) => {
 				console.log(res);
-			});
+				if(!res.status){
+					Alert.alert('发送验证码成功');
+				}
+			}).catch(e => console.log(e))
+	}
+
+	_getToken() {
+		if(!this.state.phone || !this.state.phone.trim()){
+			return Alert.alert('请输入手机号');
+		}
+		if(!/^1[34578]\d{9}$/.test(this.state.phone)){
+			return Alert.alert('手机号格式不正确');
+		}
+		if(!this.state.code || !this.state.code.trim()) {
+			return Alert.alert('请输入验证码');
+		}
+		// 发送请求 获取accessToken
+		request.post(config.api.base + config.api.getToken, {
+			phone: this.state.phone,
+			code: this.state.code
+		}).then(res => {
+			console.log(res);
+			// mock数据
+			// res = {
+			// 	'X-AUTH-TOKEN': 'eyJuYW1lIjoi5LiA55m9IiwicGhvbmUiOiIxNTk2Nzg0MjQzOCIsImFjY291bnRJZCI6NTg1MzZ9.cOL+8knDPYMuG3yK+JjW62PMr4nM8NrEoUqW+fL7Xto='
+			// };
+			request.get(config.api.base + config.api.getAddressList, null, {
+				'X-AUTH-TOKEN': res.data['X-AUTH-TOKEN']
+			}).then(res => console.log(res))
+		}).catch(e => {
+			console.log(e);
+		})
 	}
 }
 
