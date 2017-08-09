@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { StyleSheet, Dimensions, View, Text, Image, TextInput, Alert } from 'react-native';
+import React, { Component, PropTypes } from 'react';
+import { StyleSheet, AsyncStorage, Dimensions, View, Text, Image, TextInput, Alert, TouchableOpacity } from 'react-native';
 
 
 import request from '../../common/request';
@@ -7,7 +7,7 @@ import config from '../../common/config';
 
 
 let { width, height } = Dimensions.get('window');
-class Signin extends Component {
+class SignIn extends Component {
 
 	constructor(props) {
 		super(props);
@@ -15,6 +15,7 @@ class Signin extends Component {
 			phone: '',
 			code: ''
 		}
+		console.log(this.props);
 	}
 
 	render() {
@@ -37,7 +38,9 @@ class Signin extends Component {
 						</View>
 					</View>
 				</View>
-				<Image style={styles.close} source={require('./img/close.png')} />
+				<TouchableOpacity style={styles.closeBox} onPress={() => this.props.navigation.goBack()}>
+					<Image style={styles.close} source={require('./img/close.png')} />
+				</TouchableOpacity>
 			</View>
 		);
 	}
@@ -85,16 +88,34 @@ class Signin extends Component {
 		request.post(config.api.base + config.api.getToken, {
 			phone: this.state.phone,
 			code: this.state.code
-		}).then(res => {
+		})
+		// 将 accessToken 存储在本地
+		.then(res => {
 			console.log(res);
 			// mock数据
-			// res = {
-			// 	'X-AUTH-TOKEN': 'eyJuYW1lIjoi5LiA55m9IiwicGhvbmUiOiIxNTk2Nzg0MjQzOCIsImFjY291bnRJZCI6NTg1MzZ9.cOL+8knDPYMuG3yK+JjW62PMr4nM8NrEoUqW+fL7Xto='
-			// };
-			request.get(config.api.base + config.api.getAddressList, null, {
-				'X-AUTH-TOKEN': res.data['X-AUTH-TOKEN']
-			}).then(res => console.log(res))
-		}).catch(e => {
+			res.data = {
+				'X-AUTH-TOKEN': 'eyJuYW1lIjoi5LiA55m9IiwicGhvbmUiOiIxNTk2Nzg0MjQzOCIsImFjY291bnRJZCI6NTg1MzZ9.cOL+8knDPYMuG3yK+JjW62PMr4nM8NrEoUqW+fL7Xto='
+			};
+			// 将 accessToken 存储在本地
+			if(res.data){
+				return AsyncStorage.setItem('X-AUTH-TOKEN', res.data['X-AUTH-TOKEN']);
+			}
+		})
+		// 存储后，在从本地 读取 accessToken
+		.then(() => {
+			return AsyncStorage.getItem('X-AUTH-TOKEN');
+		})
+		// 后接的then函数 为外传回调函数，便于抽象 登录组件
+		// AsyncStorage.getItem 后then的首參 是result，而不是error
+		.then(result => {
+			this.props.setToken(result)
+			// 查询地址列表
+			// return request.get(config.api.base + config.api.getAddressList, null, {
+			// 	'X-AUTH-TOKEN': result
+			// })
+		})
+		// .then(res => console.log(res))
+		.catch(e => {
 			console.log(e);
 		})
 	}
@@ -173,13 +194,27 @@ const styles = StyleSheet.create({
 		color: '#ff0000',
 		fontWeight: '700'
 	},
-	close: {
+	closeBox: {
 		position: 'absolute',
 		width: 30,
 		height: 30,
 		top: 50,
 		left: 30
+	},
+	close: {
+		width: 30,
+		height: 30,
+		resizeMode: 'contain'
 	}
 });
 
-export default Signin;
+SignIn.PropTypes = {
+	// 必备参数： 设置accessToken
+	setToken: PropTypes.func.isRequired,
+	// 必备参数： 导航，用于close返回
+	navigation: PropTypes.shape({
+		goBack: PropTypes.func.isRequired
+	})
+}
+
+export default SignIn;

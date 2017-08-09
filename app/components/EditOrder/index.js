@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Switch, TextInput } from 'react-native';
+import { StyleSheet, AsyncStorage, View, Text, Switch, TextInput } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconO from 'react-native-vector-icons/Octicons';
 
 
+import SignIn from '../SignIn/index';
 import Header from '../common/header';
 import Footer from './footer';
 
@@ -20,51 +21,78 @@ class EditOrder extends Component {
 		}
 	}
 
+	componentWillMount(){
+		// 先确认 本地是否已 存储token
+		AsyncStorage.getItem('X-AUTH-TOKEN')
+			.then(res => {
+				this.setState({
+					token: res
+				})
+			})
+		// 临时清除 登录状态使用
+		AsyncStorage.removeItem('X-AUTH-TOKEN');
+	}
+
 	render() {
 		let params = this.props.navigation.state.params;
-		return (
-			<View style={styles.container}>
-				<Header title='订单编辑' navigation={this.props.navigation} />
-				<View style={styles.main}>
-					<Text style={styles.chooseAddress} onPress={() => this._goManageAddressPage()}>去选择地址</Text>
-					<View style={styles.recycleBox}>
-						<View style={styles.recycleTitle}>
-							<Icon name='recycle' size={22} color='#c7c7c7' />
-							<Text style={styles.recycleTitleTxt}>回收物品</Text>
+		console.log(this.state.token);
+		// 若未登录，则先登录
+		if(!this.state.token){
+			// 2个参数：1、用于设置accessToken；2、用于close返回
+			return <SignIn setToken={this._setToken.bind(this)} navigation={this.props.navigation} />
+		}
+		// 已登录 则直接进入页面
+		else {
+			return (
+				<View style={styles.container}>
+					<Header title='订单编辑' navigation={this.props.navigation} />
+					<View style={styles.main}>
+						<Text style={styles.chooseAddress} onPress={() => this._goManageAddressPage()}>去选择地址</Text>
+						<View style={styles.recycleBox}>
+							<View style={styles.recycleTitle}>
+								<Icon name='recycle' size={22} color='#c7c7c7' />
+								<Text style={styles.recycleTitleTxt}>回收物品</Text>
+							</View>
+							<View style={styles.goodsBox}>
+								<Text>
+									{
+										params.recycleGood.map(item => item.name).join('、')
+									}
+								</Text>
+							</View>
 						</View>
-						<View style={styles.goodsBox}>
-							<Text>
-								{
-									params.recycleGood.map(item => item.name).join('、')
-								}
-							</Text>
+						<View style={styles.airConditionerBox}>
+							<View style={styles.airConditioner}>
+								<IconO name='tools' size={22} color='#c7c7c7' />
+								<Text style={styles.airConditionerTxt}>是否需要拆卸空调（拆卸费50元）</Text>
+							</View>
+							<Switch onValueChange={this._changeAerialWork.bind(this)} value={this.state.isAerialWork} />
+						</View>
+						<View style={styles.remarksBox}>
+							<TextInput style={styles.remarks} multiline={true} numberOfLines={5}
+								placeholder='给虎哥写点小提示 停车不方便等' placeholderTextColor='#bbb'
+								value={this.state.remarks} maxLength={100}
+								onChangeText={this._changeRemarks.bind(this)}
+								textAlignVertical='top'/>
+							<Text style={[styles.maxLength, this.state.remarks.length ? styles.none : null]}>(100字以内)</Text>
+						</View>
+						<View style={styles.tagBox}>
+							{
+								this.state.tag.map((item, index) => 
+									<Text key={index} style={styles.tag} onPress={() => this._addTag(item)}>{item}</Text>)
+							}
 						</View>
 					</View>
-					<View style={styles.airConditionerBox}>
-						<View style={styles.airConditioner}>
-							<IconO name='tools' size={22} color='#c7c7c7' />
-							<Text style={styles.airConditionerTxt}>是否需要拆卸空调（拆卸费50元）</Text>
-						</View>
-						<Switch onValueChange={this._changeAerialWork.bind(this)} value={this.state.isAerialWork} />
-					</View>
-					<View style={styles.remarksBox}>
-						<TextInput style={styles.remarks} multiline={true} numberOfLines={5}
-							placeholder='给虎哥写点小提示 停车不方便等' placeholderTextColor='#bbb'
-							value={this.state.remarks} maxLength={100}
-							onChangeText={this._changeRemarks.bind(this)}
-							textAlignVertical='top'/>
-						<Text style={[styles.maxLength, this.state.remarks.length ? styles.none : null]}>(100字以内)</Text>
-					</View>
-					<View style={styles.tagBox}>
-						{
-							this.state.tag.map((item, index) => 
-								<Text key={index} style={styles.tag} onPress={() => this._addTag(item)}>{item}</Text>)
-						}
-					</View>
+					<Footer />
 				</View>
-				<Footer />
-			</View>
-		)
+			)
+		}
+	}
+
+	_setToken(res) {
+		this.setState({
+			token: res
+		})
 	}
 
 	_changeAerialWork() {
