@@ -29,8 +29,6 @@ class EditOrder extends Component {
 					token: res
 				})
 			})
-		// 临时清除 登录状态使用
-		AsyncStorage.removeItem('X-AUTH-TOKEN');
 	}
 
 	render() {

@@ -5,6 +5,8 @@ import { DrawerNavigator, DrawerItems } from 'react-navigation';
 
 import RecycleListPage from '../RecycleList/index';
 import MyOrder from '../MyOrder/index';
+import CustomerCenter from '../CustomerCenter/index';
+import SetUp from '../SetUp/index';
 
 
 // 抽屉 导航
@@ -12,7 +14,9 @@ const Menu = DrawerNavigator(
 	{
 		// 默认 显示的 主页面 组件
 		'虎哥回收': { screen: RecycleListPage },
-		'我的订单': { screen: MyOrder }
+		// '我的订单': { screen: MyOrder },
+		// '个人中心': { screen: CustomerCenter },
+		'设置': { screen: SetUp }
 	},
 	{
 		drawerWidth: 200,
