@@ -33,7 +33,6 @@ class EditOrder extends Component {
 
 	render() {
 		let params = this.props.navigation.state.params;
-		console.log(this.state.token);
 		// 若未登录，则先登录
 		if(!this.state.token){
 			// 2个参数：1、用于设置accessToken；2、用于close返回
@@ -112,7 +111,7 @@ class EditOrder extends Component {
 	}
 
 	_goManageAddressPage(){
-		this.props.navigation.navigate('ManageAddress');
+		this.props.navigation.navigate('ManageAddress', {token: this.state.token});
 	}
 }
 

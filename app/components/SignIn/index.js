@@ -57,6 +57,7 @@ class SignIn extends Component {
 		});
 	}
 
+	// 请求 短信验证码
 	_getCode() {
 		if(!this.state.phone || !this.state.phone.trim()){
 			return Alert.alert('请输入手机号');
@@ -74,6 +75,7 @@ class SignIn extends Component {
 			}).catch(e => console.log(e))
 	}
 
+	// 请求 验证身份信息, 并本地储存 accessToken
 	_getToken() {
 		if(!this.state.phone || !this.state.phone.trim()){
 			return Alert.alert('请输入手机号');
@@ -105,16 +107,10 @@ class SignIn extends Component {
 		.then(() => {
 			return AsyncStorage.getItem('X-AUTH-TOKEN');
 		})
-		// 后接的then函数 为外传回调函数，便于抽象 登录组件
 		// AsyncStorage.getItem 后then的首參 是result，而不是error
 		.then(result => {
 			this.props.setToken(result)
-			// 查询地址列表
-			// return request.get(config.api.base + config.api.getAddressList, null, {
-			// 	'X-AUTH-TOKEN': result
-			// })
 		})
-		// .then(res => console.log(res))
 		.catch(e => {
 			console.log(e);
 		})
