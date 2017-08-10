@@ -19,7 +19,8 @@ export default {
 		getProducts: 'api/mobile/normal/getProducts',
 		getCode: 'mobile/auth/requestSmsCode',
 		getToken: 'mobile/auth/login',
-		getAddressList: 'api/mobile/deal/addresses'
+		getAddressList: 'api/mobile/deal/addresses',
+		getAddressInfo: 'api/mobile/normal/addressinfo'
 	},
 	static: {
 		base: 'http://test.hugehuge.cn/web/'
