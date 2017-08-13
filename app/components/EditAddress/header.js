@@ -11,17 +11,13 @@ class Header extends Component {
 			<View style={styles.header}>
 				<Icon name="md-arrow-back" size={30} onPress={this._goBack.bind(this)}/>
 				<Text style={styles.headerText}>{this.props.title}</Text>
-				<Text onPress={ () => this._saveAddress() } style={styles.add}>保存</Text>
+				<Text onPress={ () => this.props.saveAddress() } style={styles.save}>保存</Text>
 			</View>
 		)
 	}
 	// 调出 左边栏 菜单
 	_goBack(){
 		this.props.navigation.goBack();
-	}
-
-	_saveAddress() {
-		console.log('save');
 	}
 
 }
@@ -40,7 +36,7 @@ const styles = StyleSheet.create({
 	headerText: {
 		fontSize: 20
 	},
-	add: {
+	save: {
 		fontSize: 17
 	}
 });

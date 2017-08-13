@@ -94,10 +94,6 @@ class SignIn extends Component {
 		// 将 accessToken 存储在本地
 		.then(res => {
 			console.log(res);
-			// mock数据
-			res.data = {
-				'X-AUTH-TOKEN': 'eyJuYW1lIjoi5LiA55m9IiwicGhvbmUiOiIxNTk2Nzg0MjQzOCIsImFjY291bnRJZCI6NTg1MzZ9.cOL+8knDPYMuG3yK+JjW62PMr4nM8NrEoUqW+fL7Xto='
-			};
 			// 将 accessToken 存储在本地
 			if(res.data){
 				return AsyncStorage.setItem('X-AUTH-TOKEN', res.data['X-AUTH-TOKEN']);

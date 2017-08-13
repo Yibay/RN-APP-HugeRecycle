@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Image, TextInput, Modal, Picker } from 'react-native';
+import { StyleSheet, AsyncStorage, View, Text, Image, TextInput, Modal, Picker } from 'react-native';
 
 
 import request from '../../common/request';
 import config from '../../common/config';
+import { testAddressForm } from '../../common/tools';
 
 import Header from './header';
 import PickerModal from './pickerModal';
@@ -17,6 +18,11 @@ class EditAddress extends Component {
 			modalVisible: false,
 			formData: {
 				id: null,
+				// 姓名
+				customerName: null,
+				// 电话
+				telNo: null,
+				// 地址信息
 				cityId: null,
 				city: null,
 				regionId: null,
@@ -25,12 +31,16 @@ class EditAddress extends Component {
 				street: null,
 				communityId: null,
 				communityName: null,
-				address: null,
-				telNo: null,
-				locationDefault: false,
+				// 有无户号
+				haveHouseNumber: true,
+				// 有户号 详细地址信息
 				building: null,
 				unit: null,
-				room: null
+				room: null,
+				// 无户号 详细地址信息
+				address: null,
+				// 是否为默认地址
+				locationDefault: false
 			},
 			// 1阶 区列表
 			regions: [],
@@ -57,28 +67,34 @@ class EditAddress extends Component {
 	render() {
 		return(
 			<View style={styles.container}>
-				<Header title='地址编辑' navigation={this.props.navigation} />
+				{/* 页头 */}
+				<Header title='地址编辑' navigation={this.props.navigation} saveAddress={() => this._saveAddress()} />
+				{/* 表单 */}
 				<View style={styles.form}>
 					<View style={[styles.formRow ,styles.formFirstRow]}>
 						<Image style={styles.formImg} source={require('./img/img_account.png')} />
-						<TextInput style={styles.formInput} placeholder='请输入联系人姓名' />
+						<TextInput style={styles.formInput} placeholder='请输入联系人姓名' onChangeText={customerName => this.setState({
+							formData: Object.assign({}, this.state.formData, {customerName: customerName.trim()})
+						})} />
 					</View>
 					<View style={styles.formRow}>
 						<Image style={styles.formImg} source={require('./img/tel_phone.png')} />
-						<TextInput style={styles.formInput} placeholder='请输入手机号码' />
+						<TextInput style={styles.formInput} placeholder='请输入手机号码' onChangeText={telNo => this.setState({
+							formData: Object.assign({}, this.state.formData, {telNo: telNo.trim()})
+						})} />
 					</View>
 					{/* 地址 级联选择器 */}
 					<View style={styles.formRow}>
 						{/* 选择 区 */}
 						<Image style={styles.formImg} source={require('./img/address.png')} />
-						<Text style={styles.formPickerVal}
+						<Text style={[styles.formPickerPlaceholder, this.state.formData.region ? styles.formPickerVal : null]}
 							onPress={() => this._showPicker(this.state.regions, this.state.formData.region,
 								{ id:'regionId', name: 'region', sublist: 'streets' })}>
 							{ this.state.formData.region ? this.state.formData.region : '请选择区' }
 						</Text>
 						{/* 选择 街道 */}
 						<Image style={styles.formImg} source={require('./img/address.png')} />
-						<Text style={styles.formPickerVal}
+						<Text style={[styles.formPickerPlaceholder, this.state.formData.street ? styles.formPickerVal : null]}
 							onPress={() => this._showPicker(this.state.streets, this.state.formData.street,
 								{id:'streetId', name: 'street', sublist: 'communities'})}>
 							{ this.state.formData.street ? this.state.formData.street : '请选择街道' }
@@ -87,19 +103,61 @@ class EditAddress extends Component {
 					<View style={styles.formRow}>
 						{/* 选择 小区 */}
 						<Image style={styles.formImg} source={require('./img/address.png')} />
-						<Text style={styles.formPickerVal}
+						<Text style={[styles.formPickerPlaceholder, this.state.formData.communityName ? styles.formPickerVal : null]}
 							onPress={() => this._showPicker(this.state.communities, this.state.formData.communityName,
 								{ id:'communityId', name: 'communityName'})}>
 							{ this.state.formData.communityName ? this.state.formData.communityName : '请选择小区' }
 						</Text>
 						{/* 有无 户号 */}
-						<Image style={styles.formImg} source={require('./img/ic_default_selected.png')} />
-						<Text style={styles.formPickerVal}
-							onPress={() => {}}>
+						<Image style={styles.formImg} source={
+							this.state.formData.haveHouseNumber ? require('./img/ic_finished_time_2.png') : require('./img/ic_finished_time.png')} />
+						<Text style={styles.formPickerPlaceholder}
+							onPress={() => this.setState({
+								formData: Object.assign({}, this.state.formData, {haveHouseNumber: !this.state.formData.haveHouseNumber})
+							})}>
 							户号
 						</Text>
 					</View>
+					{
+						/* 根据 有无户号 显示 */
+						this.state.formData.haveHouseNumber ? 
+						/* 有户号地址 */
+						<View style={styles.formRow}>
+							<Image style={styles.formImg} source={require('./img/address.png')} />
+							<View style={styles.formLineBox}>
+								<TextInput style={styles.formInputHasLine} onChangeText={building => this.setState({
+									formData: Object.assign({}, this.state.formData, {building: building.trim().toUpperCase()})
+								})} keyboardType='numeric' autoCapitalize='none'/>
+							</View>
+							<Text style={styles.formTxt}>幢</Text>
+							<View style={styles.formLineBox}>
+								<TextInput style={styles.formInputHasLine} onChangeText={unit => this.setState({
+									formData: Object.assign({}, this.state.formData, {unit: unit.trim().toUpperCase()})
+								})} />
+							</View>
+							<Text style={styles.formTxt}>单元</Text>
+							<View style={styles.formLineBox}>
+								<TextInput style={styles.formInputHasLine} onChangeText={room => this.setState({
+									formData: Object.assign({}, this.state.formData, {room: room.trim().toUpperCase()})
+								})} />
+							</View>
+							<Text style={[styles.formTxt, {marginRight: 20}]}>室</Text>
+						</View>
+						:
+						/* 无户号地址 */
+						<View style={styles.formRow}>
+							<Image style={styles.formImg} source={require('./img/address.png')} />
+							<TextInput style={styles.formInput} placeholder='请输入详细地址' onChangeText={address => this.setState({
+								formData: Object.assign({}, this.state.formData, {address: address.trim()})
+							})} />
+						</View>
+					}
 				</View>
+				<View style={styles.msgBox}>
+					<Text style={styles.msg}>(目前暂时只支持杭州地区)</Text>
+					<Text style={styles.msg}>(虎哥中转站服务暂时支持部分小区)</Text>
+				</View>
+				{/* 选择器组件 */}
 				<PickerModal modalVisible={this.state.modalVisible} closePicker={() => this._closePicker()}
 					list={this._pretreat(this.state.list)}
 					selectedItem={this.state.selectedItem} changeSelect={(item) => this._changeFormAddressData(item)} />
@@ -125,7 +183,39 @@ class EditAddress extends Component {
 			.catch(e => console.log(e))
 	}
 
+	// 保存地址 信息发送请求
+	_saveAddress() {
+		// 后台设定 address 不能为空
+		// 所以 若有户号
+		if(this.state.formData.haveHouseNumber){
+			// 则拼接 幢-单元-室
+			this.setState({
+				formData: Object.assign({}, this.state.formData, {
+					address: [this.state.formData.building, this.state.formData.unit, this.state.formData.room].join('-')	
+				})
+			})
+		}
+		console.log(this.state.formData);
+		// 验证 表单数据
+		if(testAddressForm(this.state.formData)){
+			// 获取token
+			AsyncStorage.getItem('X-AUTH-TOKEN')
+				// 发送请求
+				.then(token => request.post(config.api.base + config.api.addAddress, this.state.formData, {'X-AUTH-TOKEN': token}))
+				.then(res => {
+					console.log(res);
+					this.props.navigation.goBack();
+				})
+				.catch(e => console.log(e))
+		}
+	}
+
+	/* --- pickerModal 相关start --- */
+
 	// 弹出 选择器 (设置 选项列表，默认选中值)
+	// 参数1: list, option列表；[{id: Number, name: String},...]
+	// 参数2: defaultName, String
+	// 参数3: submitItem，{id: String, name: String, sublist: String}
 	_showPicker(list, defaultName, submitItem) {
 		this.setState({
 			// 设置 选择器Modal 可见
@@ -188,7 +278,6 @@ class EditAddress extends Component {
 
 	// 预处理 list, 因为communities数组中，没有id, name; 只有communityId, communityName
 	_pretreat(list){
-		console.log(list);
 		return list.map(item => {
 			if(!item.id && item.communityId){
 				item.id = item.communityId;
@@ -199,6 +288,8 @@ class EditAddress extends Component {
 			return item;
 		});
 	}
+
+	/* --- pickerModal 相关end --- */
 }
 
 const styles = StyleSheet.create({
@@ -229,12 +320,38 @@ const styles = StyleSheet.create({
 		flex: 1,
 		height: 60
 	},
-	formPickerVal: {
+	formPickerPlaceholder: {
 		flex: 1,
 		height: 60,
 		lineHeight: 59,
 		fontSize: 18,
 		color: '#c7c7cd'
+	},
+	formPickerVal: {
+		color: '#000'
+	},
+	formLineBox: {
+		flex: 1,
+		height: 40,
+		borderBottomWidth: 1,
+		borderBottomColor: '#767676'
+	},
+	formInputHasLine: {
+		height: 40,
+		textAlign: 'center'
+	},
+	formTxt: {
+		height: 60,
+		marginHorizontal: 5,
+		fontSize: 18,
+		lineHeight: 60,
+		color: '#767676'
+	},
+	msg: {
+		marginTop: 15,
+		textAlign: 'center',
+		fontSize: 15,
+		color: '#767676'
 	}
 });
 

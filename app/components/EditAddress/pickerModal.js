@@ -7,13 +7,14 @@ class PickerModal extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			// 用于显示 选中项
 			selectedVal: this.props.selectedItem.name,
+			// 用于传入 回调函数的参数, 作用父级组件
 			selectedItem: this.props.selectedItem
 		}
 	}
 
 	componentWillReceiveProps(nextProps) {
-		console.log(nextProps);
 		let selectedItem = nextProps.selectedItem;
 		// 注意：若是 没有默认选中项，则 默认选中 第1项
 		if(!selectedItem.name && nextProps.list.length){

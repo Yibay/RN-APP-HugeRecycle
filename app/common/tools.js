@@ -1,3 +1,8 @@
+import React from 'react';
+import { Alert } from 'react-native';
+
+/* --- RecycleList 组件中 使用的工具函数 start --- */
+
 // 将 请求回的数据，处理成 RecycleList 可以展示的 数据类型
 export function createRecycleListData(data) {
     data = data.data;
@@ -36,3 +41,77 @@ function _assign(data, props) {
         });
     }
 }
+
+/* --- RecycleList 组件中 使用的工具函数 end --- */
+
+
+/* --- EditAddress 组件中 使用的工具函数 start --- */
+
+export function testAddressForm(formData){
+    console.log(formData);
+
+    if(!formData.customerName) {
+        Alert.alert('请填写联系人姓名');
+        return false;
+    }
+    if(!formData.telNo) {
+        Alert.alert('请填写手机号码');
+        return false;
+    }
+    if(!/^1[34578]\d{9}$/.test(formData.telNo)){
+        Alert.alert('手机号码格式错误');
+        return false;
+    }
+    if(!formData.regionId) {
+        Alert.alert('请选择区');
+        return false;
+    }
+    if(!formData.streetId) {
+        Alert.alert('请选择街道');
+        return false;
+    }
+    if(!formData.communityId) {
+        Alert.alert('请选择小区');
+        return false;
+    }
+
+    // 若有户号
+    if(formData.haveHouseNumber) {
+        if(!formData.building) {
+            Alert.alert('请填写幢');
+            return false;
+        }
+        if(!/^[0-9A-Z]+$/.test(formData.building)){
+            Alert.alert('幢不能含有中文');
+            return false;
+        }
+        if(!formData.unit) {
+            Alert.alert('请填写单元');
+            return false;
+        }
+        if(!/^[0-9A-Z]+$/.test(formData.unit)){
+            Alert.alert('单元不能含有中文');
+            return false;
+        }
+        if(!formData.room) {
+            Alert.alert('请填写室');
+            return false;
+        }
+        if(!/^[0-9A-Z]+$/.test(formData.room)){
+            Alert.alert('室不能含有中文');
+            return false;
+        }
+    }
+    // 若无户号
+    else {
+        if(!formData.address){
+            Alert.alert('请填写详细地址');
+            return false;
+        }
+    }
+
+    return true;
+    
+}
+
+/* --- EditAddress 组件中 使用的工具函数 end --- */
