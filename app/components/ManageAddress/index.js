@@ -16,14 +16,15 @@ class ManageAddress extends Component {
 			rowHasChanged: (r1, r2) => r1 !== r2
 		})
 		this.state = {
-			dataSource: ds.cloneWithRows([])
+			dataSource: ds.cloneWithRows([]),
+			needUpdateAddress: false
 		}
 	}
 
 	render() {
 		return (
 			<View style={styles.container}>
-				<Header navigation={this.props.navigation} title='地址管理' />
+				<Header navigation={this.props.navigation} title='地址管理' setUpdateAddress={() => this._setUpdateAddress()} />
 				<ListView style={styles.addressList}
 					dataSource={this.state.dataSource}
 					renderRow={this._renderRow.bind(this)}
@@ -33,17 +34,39 @@ class ManageAddress extends Component {
 	}
 
 	componentDidMount() {
+		// 初始化 客户地址列表
+		this._updateAddress();
+	}
+
+	componentDidUpdate() {
+		// 新增／更新 地址时，刷新地址列表
+		if(this.state.needUpdateAddress){
+			this._updateAddress();
+		}
+	}
+
+	// 设置 更新地址列表
+	_setUpdateAddress(){
+		this.setState({
+			needUpdateAddress: true
+		})
+	}
+
+	// 更新 地址列表
+	_updateAddress() {
 		let params = this.props.navigation.state.params;
 		// 请求 地址列表 信息
 		request.get(config.api.base + config.api.getAddressList, null, {
 			'X-AUTH-TOKEN': params.token
 		})
 		.then(res => {
+			console.log(res);
 			// 确认地址列表 信息有效
 			if(!res.status && res.data && res.data.addresses){
 				// 更新 地址列表数据
 				this.setState({
-					dataSource: this.state.dataSource.cloneWithRows(res.data.addresses)
+					dataSource: this.state.dataSource.cloneWithRows(res.data.addresses),
+					needUpdateAddress: false
 				})
 			}
 		})
@@ -51,7 +74,6 @@ class ManageAddress extends Component {
 	}
 
 	_renderRow(row) {
-		console.log(row);
 		return (
 			<View style={styles.addressItem}>
 				<View style={styles.nameTel}>

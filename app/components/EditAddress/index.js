@@ -204,6 +204,9 @@ class EditAddress extends Component {
 				.then(token => request.post(config.api.base + config.api.addAddress, this.state.formData, {'X-AUTH-TOKEN': token}))
 				.then(res => {
 					console.log(res);
+					// 通知上一页 更新 客户地址列表
+					this.props.navigation.state.params.setUpdateAddress();
+					// 返回上一页
 					this.props.navigation.goBack();
 				})
 				.catch(e => console.log(e))

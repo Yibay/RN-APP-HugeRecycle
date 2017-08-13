@@ -21,7 +21,10 @@ class Header extends Component {
 	}
 
 	_addAddress() {
-		this.props.navigation.navigate('EditAddress');
+		this.props.navigation.navigate('EditAddress', {
+			// 将通知 本页 更新客户地址列表的功能函数 传给下一页
+			setUpdateAddress: this.props.setUpdateAddress
+		});
 	}
 
 }
