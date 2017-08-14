@@ -24,7 +24,7 @@ class ManageAddress extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Header navigation={this.props.navigation} title='地址管理' setUpdateAddress={() => this._setUpdateAddress()} />
+				<Header navigation={this.props.navigation} title='地址管理' goToEditAddress={() => this._goToEditAddress()} />
 				<ListView style={styles.addressList}
 					dataSource={this.state.dataSource}
 					renderRow={this._renderRow.bind(this)}
@@ -43,6 +43,24 @@ class ManageAddress extends Component {
 		if(this.state.needUpdateAddress){
 			this._updateAddress();
 		}
+	}
+
+	// 进入地址 编辑页
+	_goToEditAddress(row) {
+		let params = {
+			// 将通知 本页 更新客户地址列表的功能函数 传给下一页
+			// 用于 保存地址后，返回本页
+			setUpdateAddress: this._setUpdateAddress.bind(this)
+		};
+		// 若传入 row信息（编辑地址，而不是新增地址）
+		if(row){
+			// 将此地址信息传入
+			Object.assign(params, {
+				formData: row
+			});
+		}
+		// 编辑页 并 传入数据
+		this.props.navigation.navigate('EditAddress', params);
 	}
 
 	// 设置 更新地址列表
@@ -88,7 +106,7 @@ class ManageAddress extends Component {
 						<Text style={styles.operationItemTxt}>默认</Text>
 					</View>
 					<View style={styles.operationItem}>
-						<Text style={styles.operationItemTxt}>编辑</Text>
+						<Text style={styles.operationItemTxt} onPress={() => this._goToEditAddress(row)}>编辑</Text>
 					</View>
 					<View style={styles.operationItem}>
 						<Text style={styles.operationItemTxt}>删除</Text>

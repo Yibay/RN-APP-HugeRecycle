@@ -11,20 +11,14 @@ class Header extends Component {
 			<View style={styles.header}>
 				<Icon name="md-arrow-back" size={30} onPress={this._goBack.bind(this)}/>
 				<Text style={styles.headerText}>{this.props.title}</Text>
-				<Text onPress={ () => this._addAddress() } style={styles.add}>添加</Text>
+				{/* 跳转至 地址编辑页 */}
+				<Text onPress={ () => this.props.goToEditAddress() } style={styles.add}>添加</Text>
 			</View>
 		)
 	}
 	// 调出 左边栏 菜单
 	_goBack(){
 		this.props.navigation.goBack();
-	}
-
-	_addAddress() {
-		this.props.navigation.navigate('EditAddress', {
-			// 将通知 本页 更新客户地址列表的功能函数 传给下一页
-			setUpdateAddress: this.props.setUpdateAddress
-		});
 	}
 
 }

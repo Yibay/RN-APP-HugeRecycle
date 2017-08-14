@@ -5,7 +5,6 @@ import { StyleSheet, View, Text, Alert } from 'react-native';
 class Footer extends Component {
 
 	render() {
-		console.log(this.props.recycleGood);
 		return(
 			<View style={styles.footer}>
 				<View style={styles.recycleGoodBox}>

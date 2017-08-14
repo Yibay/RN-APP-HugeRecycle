@@ -61,7 +61,6 @@ class RecycleList extends Component {
 		request.get(config.api.base + config.api.getProducts)
 			.then((data) => { 
 				let row = createRecycleListData(data);
-				console.log(row);
 				this.setState({
 					dataSource: this.state.dataSource.cloneWithRows(row),
 					recycleList: row

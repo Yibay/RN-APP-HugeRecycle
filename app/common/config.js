@@ -26,7 +26,9 @@ export default {
 		// 获取 地区信息
 		getAddressInfo: 'api/mobile/normal/addressinfo',
 		// 新增 客户地址
-		addAddress: 'api/mobile/deal/addAddress'
+		addAddress: 'api/mobile/deal/addAddress',
+		// 编辑 客户地址
+		editAddress: 'api/mobile/deal/editAddress'
 	},
 	static: {
 		base: 'http://test.hugehuge.cn/web/'
