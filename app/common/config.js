@@ -28,7 +28,9 @@ export default {
 		// 新增 客户地址
 		addAddress: 'api/mobile/deal/addAddress',
 		// 编辑 客户地址
-		editAddress: 'api/mobile/deal/editAddress'
+		editAddress: 'api/mobile/deal/editAddress',
+		// 删除 客户地址
+		deleteAddress: 'api/mobile/deal/deleteAddress/'
 	},
 	static: {
 		base: 'http://test.hugehuge.cn/web/'

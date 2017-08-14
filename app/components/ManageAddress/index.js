@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, ListView } from 'react-native';
+import { StyleSheet, AsyncStorage, View, Text, ListView, Alert } from 'react-native';
 
 
 import request from '../../common/request';
@@ -45,14 +45,16 @@ class ManageAddress extends Component {
 		}
 	}
 
-	// 进入地址 编辑页
+	/* --- A. 按钮事件 start --- */
+
+	// a. 按钮1 编辑｜添加 地址（进入地址 编辑页）
 	_goToEditAddress(row) {
 		let params = {
 			// 将通知 本页 更新客户地址列表的功能函数 传给下一页
 			// 用于 保存地址后，返回本页
 			setUpdateAddress: this._setUpdateAddress.bind(this)
 		};
-		// 若传入 row信息（编辑地址，而不是新增地址）
+		// 若有row信息 则传入（编辑地址，而不是新增地址）
 		if(row){
 			// 将此地址信息传入
 			Object.assign(params, {
@@ -63,14 +65,14 @@ class ManageAddress extends Component {
 		this.props.navigation.navigate('EditAddress', params);
 	}
 
-	// 设置 更新地址列表
+	// a.1 触发事件 更新地址列表
 	_setUpdateAddress(){
 		this.setState({
 			needUpdateAddress: true
 		})
 	}
 
-	// 更新 地址列表
+	// a.2 更新 地址列表
 	_updateAddress() {
 		let params = this.props.navigation.state.params;
 		// 请求 地址列表 信息
@@ -91,6 +93,37 @@ class ManageAddress extends Component {
 		.catch(e => console.log(e))
 	}
 
+	// b. 按钮2 确认 是否 删除地址
+	_comfirmDeleteAddress(addressId) {
+		Alert.alert(
+			'确认删除地址？',
+			null,
+			[
+				{text: '取消', onPress: () => console.log('取消删除')},
+				{text: '确认', onPress: () => this._deleteAddress(addressId)}
+			]
+		)
+	}
+	// b.1 删除 地址
+	_deleteAddress(id) {
+		console.log('删除地址id：' + id);
+		// 获取 token
+		AsyncStorage.getItem('X-AUTH-TOKEN')
+			// 发送 删除地址 请求
+			.then(token => request.get(config.api.base + config.api.deleteAddress + id, null, {'X-AUTH-TOKEN': token}))
+			.then(res => {
+				console.log(res);
+				// 删除地址后，更新 地址列表
+				this._updateAddress();
+			})
+			.catch(e => console.log(e))
+	}
+
+
+	/* --- 按钮事件 end --- */
+
+
+	/* --- B. 渲染本页列表 start --- */
 	_renderRow(row) {
 		return (
 			<View style={styles.addressItem}>
@@ -109,7 +142,7 @@ class ManageAddress extends Component {
 						<Text style={styles.operationItemTxt} onPress={() => this._goToEditAddress(row)}>编辑</Text>
 					</View>
 					<View style={styles.operationItem}>
-						<Text style={styles.operationItemTxt}>删除</Text>
+						<Text style={styles.operationItemTxt} onPress={() => this._comfirmDeleteAddress(row.id)}>删除</Text>
 					</View>
 				</View>
 			</View>
@@ -126,6 +159,7 @@ class ManageAddress extends Component {
 		}
 		return address;
 	}
+	/* --- 渲染本页列表 end --- */
 
 }
 
