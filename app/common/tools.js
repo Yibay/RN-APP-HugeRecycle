@@ -115,3 +115,19 @@ export function testAddressForm(formData){
 }
 
 /* --- EditAddress 组件中 使用的工具函数 end --- */
+
+/* --- EditOrder 组件 和 ManageAddress 组件中 均有使用到 start --- */
+
+// 将地址obj 拼接成 一个 str
+export function joinAddress(row){
+    let address = row.city + row.region + row.street + row.communityName;
+    if(row.haveHouseNumber){
+        address += row.building + '幢' + row.unit + '单元' + row.room + '室';
+    }
+    else {
+        address += row.address;
+    }
+    return address;
+}
+
+/* --- EditOrder 组件 和 ManageAddress 组件中 均有使用到 end --- */

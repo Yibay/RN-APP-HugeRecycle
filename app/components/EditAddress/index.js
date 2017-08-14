@@ -16,6 +16,7 @@ class EditAddress extends Component {
 		super(props);
 		// 由编辑入口进入的 初始化表单信息
 		let formData = this.props.navigation.state.params.formData ? this.props.navigation.state.params.formData : {};
+		console.log(123123);
 		console.log(formData);
 		this.state = {
 			modalVisible: false,
@@ -34,16 +35,16 @@ class EditAddress extends Component {
 				street: formData.street ? formData.street : null,
 				communityId: formData.communityId ? formData.communityId : null,
 				communityName: formData.communityName ? formData.communityName : null,
-				// 有无户号
-				haveHouseNumber: formData.haveHouseNumber ? formData.haveHouseNumber : true,
+				// 有无户号 (boolean值，要用typeof 判定是否为 undefined)
+				haveHouseNumber: typeof formData.haveHouseNumber === 'undefined' ? true : formData.haveHouseNumber,
 				// 有户号 详细地址信息
 				building: formData.building ? formData.building : null,
 				unit: formData.unit ? formData.unit : null,
 				room: formData.room ? formData.room : null,
 				// 无户号 详细地址信息
 				address: formData.address ? formData.address : null,
-				// 是否为默认地址
-				locationDefault: false
+				// 是否为默认地址 (boolean值，要用typeof 判定是否为 undefined)
+				locationDefault: typeof formData.locationDefault === 'undefined' ? false : formData.locationDefault
 			},
 			// 1阶 区列表
 			regions: [],

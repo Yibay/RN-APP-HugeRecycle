@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, AsyncStorage, View, Text, ListView, Alert } from 'react-native';
+import { StyleSheet, AsyncStorage, View, Text, ListView, Alert, Image, TouchableOpacity } from 'react-native';
 
 
 import request from '../../common/request';
 import config from '../../common/config';
+import { joinAddress } from '../../common/tools';
 
 import Header from './header';
 
@@ -24,7 +25,9 @@ class ManageAddress extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
+				{/* 页头 */}
 				<Header navigation={this.props.navigation} title='地址管理' goToEditAddress={() => this._goToEditAddress()} />
+				{/* 客户地址列表 */}
 				<ListView style={styles.addressList}
 					dataSource={this.state.dataSource}
 					renderRow={this._renderRow.bind(this)}
@@ -119,12 +122,28 @@ class ManageAddress extends Component {
 			.catch(e => console.log(e))
 	}
 
+	// c. 按钮3 设置为 默认地址
+	_setDefaultLocation(id) {
+		console.log('默认地址：' + id);
+		AsyncStorage.getItem('X-AUTH-TOKEN')
+			.then(token => request.get(config.api.base + config.api.setDefaultLocation + id, null, {'X-AUTH-TOKEN': token}))
+			.then(res => {
+				console.log(res);
+				// 更新 上一页（订单编辑页）默认地址
+				this.props.navigation.state.params.setUpdateDefaultAddress();
+				// 返回上一页
+				this.props.navigation.goBack();
+			})
+			.catch(e => console.log(e))
+	}
+
 
 	/* --- 按钮事件 end --- */
 
 
 	/* --- B. 渲染本页列表 start --- */
 	_renderRow(row) {
+		console.log(row);
 		return (
 			<View style={styles.addressItem}>
 				<View style={styles.nameTel}>
@@ -132,12 +151,16 @@ class ManageAddress extends Component {
 					<Text style={styles.tel}>{row.telNo}</Text>
 				</View>
 				<Text style={styles.address}>
-					{ this._joinAddress(row) }
+					{ /* 来自 工具函数 将地址对象 连接成 String */ }
+					{ joinAddress(row) }
 				</Text>
 				<View style={styles.operation}>
-					<View style={[styles.operationItem, styles.operationFirstItem]}>
-						<Text style={styles.operationItemTxt}>默认</Text>
-					</View>
+					<TouchableOpacity style={[styles.operationItem, styles.operationFirstItem]} onPress={() => this._setDefaultLocation(row.id)}>
+						<View>
+							<Image style={styles.defaultAddress} source={row.locationDefault ? require('./img/ic_finished_time_2.png') : require('./img/ic_finished_time.png')} />
+							<Text style={styles.operationItemTxt}>默认</Text>
+						</View>
+					</TouchableOpacity>
 					<View style={styles.operationItem}>
 						<Text style={styles.operationItemTxt} onPress={() => this._goToEditAddress(row)}>编辑</Text>
 					</View>
@@ -149,16 +172,6 @@ class ManageAddress extends Component {
 		)
 	}
 
-	_joinAddress(row){
-		let address = row.city + row.region + row.street + row.communityName;
-		if(row.haveHouseNumber){
-			address += row.building + '幢' + row.unit + '单元' + row.room + '室';
-		}
-		else {
-			address += row.address;
-		}
-		return address;
-	}
 	/* --- 渲染本页列表 end --- */
 
 }
@@ -197,6 +210,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between'
 	},
 	operationItem: {
+		position: 'relative',
 		flex: 1,
 		borderTopWidth: 1,
 		borderLeftWidth: 1,
@@ -209,6 +223,16 @@ const styles = StyleSheet.create({
 		lineHeight: 35,
 		textAlign: 'center',
 		color: '#666'
+	},
+	defaultAddress: {
+		position: 'absolute',
+		zIndex: 1,
+		top: 17.5,
+		left: 20,
+		transform: [{translateY: -10}],
+		width: 20,
+		height: 20,
+		resizeMode: 'contain'
 	}
 })
 

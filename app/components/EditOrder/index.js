@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, AsyncStorage, View, Text, Switch, TextInput } from 'react-native';
+import { StyleSheet, AsyncStorage, View, Text, Switch, TextInput, TouchableOpacity } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconO from 'react-native-vector-icons/Octicons';
 
+
+import request from '../../common/request';
+import config from '../../common/config';
+import { joinAddress } from '../../common/tools';
 
 import SignIn from '../SignIn/index';
 import Header from '../common/header';
@@ -17,7 +21,9 @@ class EditOrder extends Component {
 		this.state = {
 			isAerialWork: false,
 			remarks: '',
-			tag: ['停车不方便','到达后联系','回收物品较多','无电梯']
+			tag: ['停车不方便','到达后联系','回收物品较多','无电梯'],
+			defaultAddress: null,
+			needUpadateDefaultAddress: false
 		}
 	}
 
@@ -44,7 +50,26 @@ class EditOrder extends Component {
 				<View style={styles.container}>
 					<Header title='订单编辑' navigation={this.props.navigation} />
 					<View style={styles.main}>
-						<Text style={styles.chooseAddress} onPress={() => this._goManageAddressPage()}>去选择地址</Text>
+						{/* 地址栏 */}
+						{
+							this.state.defaultAddress ? 
+							<TouchableOpacity onPress={() => this._goManageAddressPage()}>
+								<View style={styles.defaultAddress}>
+									<View style={styles.defaultAddressNameTelBox}>
+										<Text style={styles.defaultAddressNameTel}>{this.state.defaultAddress.customerName}</Text>
+										<Text style={styles.defaultAddressNameTel}>{this.state.defaultAddress.telNo}</Text>
+									</View>
+									<Text style={styles.defaultAddressMsg}>
+										{
+											joinAddress(this.state.defaultAddress)
+										}
+									</Text>
+								</View>
+							</TouchableOpacity>
+							:
+							<Text style={styles.chooseAddress} onPress={() => this._goManageAddressPage()}>去选择地址</Text>
+						}
+						{/* 回收物品栏 */}
 						<View style={styles.recycleBox}>
 							<View style={styles.recycleTitle}>
 								<Icon name='recycle' size={22} color='#c7c7c7' />
@@ -58,6 +83,7 @@ class EditOrder extends Component {
 								</Text>
 							</View>
 						</View>
+						{/* 拆卸空调栏 */}
 						<View style={styles.airConditionerBox}>
 							<View style={styles.airConditioner}>
 								<IconO name='tools' size={22} color='#c7c7c7' />
@@ -65,6 +91,7 @@ class EditOrder extends Component {
 							</View>
 							<Switch onValueChange={this._changeAerialWork.bind(this)} value={this.state.isAerialWork} />
 						</View>
+						{/* 备注栏 */}
 						<View style={styles.remarksBox}>
 							<TextInput style={styles.remarks} multiline={true} numberOfLines={5}
 								placeholder='给虎哥写点小提示 停车不方便等' placeholderTextColor='#bbb'
@@ -73,6 +100,7 @@ class EditOrder extends Component {
 								textAlignVertical='top'/>
 							<Text style={[styles.maxLength, this.state.remarks.length ? styles.none : null]}>(100字以内)</Text>
 						</View>
+						{/* 标签栏 */}
 						<View style={styles.tagBox}>
 							{
 								this.state.tag.map((item, index) => 
@@ -84,6 +112,44 @@ class EditOrder extends Component {
 				</View>
 			)
 		}
+	}
+
+	componentDidMount() {
+		// 更新 默认地址
+		this._updateDefaultAddress();
+	}
+
+	componentDidUpdate() {
+		// 若需要更新
+		if(this.state.needUpadateDefaultAddress){
+			// 则更新 默认地址
+			this._updateDefaultAddress();
+		}
+	}
+
+	// 触发 更新地址
+	_setUpdateDefaultAddress() {
+		this.setState({
+			needUpadateDefaultAddress: true
+		})
+	}
+
+	// 更新 默认地址
+	_updateDefaultAddress() {
+		// 获取 token
+		AsyncStorage.getItem('X-AUTH-TOKEN')
+			// 获取 客户下单页面 初始化数据
+			.then(res => request.get(config.api.base + config.api.initRecycleCreate, null, {'X-AUTH-TOKEN': res}))
+			.then(res => {
+				console.log(res);
+				this.setState({
+					// 更新 默认地址
+					defaultAddress: res.data.defaultAddress,
+					tag: res.data.tips,
+					needUpadateDefaultAddress: false
+				})
+			})
+			.catch(e => console.log(e))
 	}
 
 	_setToken(res) {
@@ -111,7 +177,10 @@ class EditOrder extends Component {
 	}
 
 	_goManageAddressPage(){
-		this.props.navigation.navigate('ManageAddress', {token: this.state.token});
+		this.props.navigation.navigate('ManageAddress', {
+			token: this.state.token,
+			setUpdateDefaultAddress: () => this._setUpdateDefaultAddress()
+		});
 	}
 }
 
@@ -129,6 +198,24 @@ const styles = StyleSheet.create({
 		lineHeight: 50,
 		textAlign: 'center',
 		color: 'red'
+	},
+	defaultAddress: {
+		marginVertical: 15,
+		paddingHorizontal: 20,
+		backgroundColor: '#fff'
+	},
+	defaultAddressNameTelBox: {
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
+	defaultAddressNameTel: {
+		height: 35,
+		lineHeight: 35
+	},
+	defaultAddressMsg: {
+		height: 35,
+		lineHeight: 35,
+		color: '#6e6e6e'
 	},
 	recycleBox: {
 		paddingLeft: 20,
