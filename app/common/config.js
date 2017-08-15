@@ -34,7 +34,9 @@ export default {
 		// 删除 客户地址
 		deleteAddress: 'api/mobile/deal/deleteAddress/',
 		// 设置 默认地址
-		setDefaultLocation: 'api/mobile/deal/setDefaultLocation/'
+		setDefaultLocation: 'api/mobile/deal/setDefaultLocation/',
+		// 移动端 下单
+		createOrder: 'api/mobile/deal/createOrder'
 	},
 	static: {
 		base: 'http://test.hugehuge.cn/web/'

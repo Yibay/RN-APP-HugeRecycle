@@ -13,7 +13,7 @@ class Content extends Component {
 		let selectGood = this.props.recycleList.filter((item) => item.id === this.props.selectId)[0];
 		return (
 			<ScrollView style={styles.container}>
-				<Text style={styles.add} onPress={() => {this.props.toggleRecycleGood(this.props.selectId, selectGood.name)}}>
+				<Text style={styles.add} onPress={() => {this.props.toggleRecycleGood(this.props.selectId, selectGood.name, selectGood.category)}}>
 					{this.props.recycleGood.some(item => item.id === this.props.selectId) ? '取消回收' : '添加到回收栏'}
 				</Text>
 				{

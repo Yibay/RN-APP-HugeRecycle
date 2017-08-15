@@ -7,13 +7,9 @@ class Footer extends Component {
 	render() {
 		return(
 			<View style={styles.footer}>
-				<Text style={styles.text} onPress={this._call.bind(this)}>确认</Text>
+				<Text style={styles.text} onPress={this.props.placeOrder}>确认</Text>
 			</View>
 		)
-	}
-
-	_call() {
-		console.log('确认');
 	}
 
 }

@@ -20,6 +20,7 @@ class Sorting extends Component {
 
 	render() {
 		let params = this.props.navigation.state.params;
+		console.log(params.recycleList);
 		return (
 			<View style={styles.container}>
 				<Header title={'物品分类'} navigation={this.props.navigation} />
@@ -40,15 +41,18 @@ class Sorting extends Component {
 		})
 	}
 
-	_toggleRecycleGood(id, name) {
+	// 添加至｜移出 回收栏
+	_toggleRecycleGood(id, name, category) {
+		// 移除 回收物品tag 出回收栏
 		if(this.state.recycleGood.some(item => item.id === id)){
 			this.setState({
 				recycleGood: this.state.recycleGood.filter(item => item.id != id)
 			});
 		}
+		// 添加 回收物品tag 入回收栏
 		else {
 			this.setState({
-				recycleGood: [].concat(this.state.recycleGood, {id: id,name: name})
+				recycleGood: [].concat(this.state.recycleGood, {id: id, name: name, category: category})
 			});
 		}
 	}

@@ -69,7 +69,6 @@ class RecycleList extends Component {
 	}
 
 	_renderRow(row) {
-		console.log(row);
 		return (
 			<TouchableHighlight onPress={() => this._goSortingPage.bind(this)(row.id)}>
 				<View style={styles.row}>

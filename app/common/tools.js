@@ -131,3 +131,32 @@ export function joinAddress(row){
 }
 
 /* --- EditOrder 组件 和 ManageAddress 组件中 均有使用到 end --- */
+
+
+// 数组去重函数
+function arrayrRemovesDuplicates (prev_array) {
+    // 结果数组(去重后的数组)
+    let result_array = [];
+
+    return prev_array
+        // 先将原数组排序，
+        .sort((v1, v2) => v1 - v2)
+        // 然后归并，
+        .reduce((prev, cur, index, array) => {
+            // 把原数组首项存入
+            if(index === 1){
+                result_array.push(prev);
+            }
+            // 比较前后2项，若不等，则存入结果数组
+            if(cur !== prev){
+                result_array.push(cur);
+            }
+            // 非 数组最后一项，返回 当前值，用于和下一项比较
+            if(index !== array.length - 1){
+                return cur;
+            }
+            // 若为数组 最后一项，则返回 结果数组
+            return result_array;
+            
+        });
+}

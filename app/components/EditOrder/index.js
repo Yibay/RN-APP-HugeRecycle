@@ -42,7 +42,7 @@ class EditOrder extends Component {
 		// 若未登录，则先登录
 		if(!this.state.token){
 			// 2个参数：1、用于设置accessToken；2、用于close返回
-			return <SignIn setToken={this._setToken.bind(this)} navigation={this.props.navigation} />
+			return <SignIn setToken={token => this.setState({token: token, needUpadateDefaultAddress: true})} navigation={this.props.navigation} />
 		}
 		// 已登录 则直接进入页面
 		else {
@@ -96,7 +96,7 @@ class EditOrder extends Component {
 							<TextInput style={styles.remarks} multiline={true} numberOfLines={5}
 								placeholder='给虎哥写点小提示 停车不方便等' placeholderTextColor='#bbb'
 								value={this.state.remarks} maxLength={100}
-								onChangeText={this._changeRemarks.bind(this)}
+								onChangeText={remarks => this.setState({remarks})}
 								textAlignVertical='top'/>
 							<Text style={[styles.maxLength, this.state.remarks.length ? styles.none : null]}>(100字以内)</Text>
 						</View>
@@ -108,7 +108,7 @@ class EditOrder extends Component {
 							}
 						</View>
 					</View>
-					<Footer />
+					<Footer placeOrder={() => this._placeOrder()} />
 				</View>
 			)
 		}
@@ -125,6 +125,16 @@ class EditOrder extends Component {
 			// 则更新 默认地址
 			this._updateDefaultAddress();
 		}
+	}
+
+	/* --- A. 更新 默认地址 start --- */
+
+	// 进入 地址管理页
+	_goManageAddressPage(){
+		this.props.navigation.navigate('ManageAddress', {
+			token: this.state.token,
+			setUpdateDefaultAddress: () => this._setUpdateDefaultAddress()
+		});
 	}
 
 	// 触发 更新地址
@@ -152,36 +162,66 @@ class EditOrder extends Component {
 			.catch(e => console.log(e))
 	}
 
-	_setToken(res) {
-		this.setState({
-			token: res
-		})
-	}
+	/* --- 更新 默认地址 end --- */
 
+	
+
+	/* --- B. 订单编辑 控件 start --- */
+
+	// 开关：是否需要 拆卸空调
 	_changeAerialWork() {
 		this.setState({
 			isAerialWork: !this.state.isAerialWork
 		});
 	}
 
-	_changeRemarks(text) {
-		this.setState({
-			remarks: text
-		})
-	}
-
+	// 向备注栏 增加 标签
 	_addTag(text){
 		this.setState({
 			remarks: this.state.remarks + ' ' + text
 		})
 	}
 
-	_goManageAddressPage(){
-		this.props.navigation.navigate('ManageAddress', {
-			token: this.state.token,
-			setUpdateDefaultAddress: () => this._setUpdateDefaultAddress()
+	// 按钮：下单
+	_placeOrder() {
+		// 表单参数
+		let params = {};
+		// 回收 大类别数组
+		let types = this.props.navigation.state.params.recycleGood.map(item => ({type: item.category}));
+		// 根据 大类别数组 是否出现重复类别 判定 type（无重复为1；有重复为3）
+		let type = 1;
+		// 从小到大，有序排列，归并判断前后2项是否相等
+		types.sort((v1, v2) => v1.type - v2.type).reduce((prev, cur) => {
+			if(cur.type === prev.type){
+				type = 3;
+			}
+			return cur;
 		});
+		Object.assign(params, this.state.defaultAddress, {
+			// 联系人 名称
+			accountName: this.state.defaultAddress.customerName,
+			// 联系电话
+			phone: this.state.defaultAddress.telNo,
+			// 是否需要 拆空调
+			isAerialWork: this.state.isAerialWork,
+			// 回收小类别
+			recycleCategoryDesc: this.props.navigation.state.params.recycleGood.map(item => item.name).join('、'),
+			// 回收类别 数组
+			types: types,
+			// 单一大类别，还是多个大类别？
+			type: type
+		});
+		console.log(params);
+		AsyncStorage.getItem('X-AUTH-TOKEN')
+			.then(token => request.post(config.api.base + config.api.createOrder, params, {'X-AUTH-TOKEN': token}))
+			.then(res => console.log(res))
+			.catch(e => console.log(e))
+		
 	}
+
+	/* --- 订单编辑 控件 end --- */
+
+	
 }
 
 const styles = StyleSheet.create({
