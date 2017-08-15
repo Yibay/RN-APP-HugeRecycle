@@ -16,7 +16,15 @@ class Header extends Component {
 	}
 	// 调出 左边栏 菜单
 	_goBack(){
-		this.props.navigation.goBack();
+		// 若预设了 回退函数
+		if(this.props.goBack){
+			// 则执行 回退函数
+			this.props.goBack();
+		}
+		else{
+			// 否则 执行 默认回退函数
+			this.props.navigation.goBack();
+		}
 	}
 
 }

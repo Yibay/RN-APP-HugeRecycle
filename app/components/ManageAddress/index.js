@@ -129,10 +129,17 @@ class ManageAddress extends Component {
 			.then(token => request.get(config.api.base + config.api.setDefaultLocation + id, null, {'X-AUTH-TOKEN': token}))
 			.then(res => {
 				console.log(res);
-				// 更新 上一页（订单编辑页）默认地址
-				this.props.navigation.state.params.setUpdateDefaultAddress();
-				// 返回上一页
-				this.props.navigation.goBack();
+				// 若需要 返回上一页，并更新上一页
+				if(this.props.navigation.state.params.setUpdateDefaultAddress){
+					// 更新 上一页（订单编辑页）默认地址
+					this.props.navigation.state.params.setUpdateDefaultAddress();
+					// 返回上一页
+					this.props.navigation.goBack();
+				}
+				// 否则更新 本页地址列表
+				else {
+					this._updateAddress();
+				}
 			})
 			.catch(e => console.log(e))
 	}
