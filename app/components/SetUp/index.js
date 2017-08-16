@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, AsyncStorage, View, Text, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, AsyncStorage, View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import { StackNavigator } from 'react-navigation';
 
+
+import request from '../../common/request';
+import config from '../../common/config';
 
 import SignIn from '../SignIn/index';
 import MyEnvRecord from '../MyEnvRecord/index';
@@ -11,6 +14,7 @@ import MyOrder from '../MyOrder/index';
 import ManageAddress from '../ManageAddress/index';
 import EditAddress from '../EditAddress/index';
 import Feedback from '../Feedback/index';
+import AboutUs from '../AboutUs/index';
 import Header from '../common/header';
 
 
@@ -70,10 +74,13 @@ class SetUp extends Component {
 						</View>
 					</TouchableOpacity>
 					{/* 检测更新栏 */}
-					<TouchableOpacity onPress={() => this._goToFeedbackPage()}>
+					<TouchableOpacity onPress={() => this._checkVersion()}>
 						<View style={styles.sectionBox}>
 							<Image style={styles.sectionImg} source={require('./img/icon_update.png')}/>
-							<Text style={styles.sectionTitle}>检测更新</Text>
+							<View style={styles.versionBox}>
+								<Text style={styles.sectionTitle}>检测更新</Text>
+								<Text style={styles.version}>{'v'+config.version}</Text>
+							</View>
 						</View>
 					</TouchableOpacity>
 					{/* 意见反馈栏 */}
@@ -84,7 +91,7 @@ class SetUp extends Component {
 						</View>
 					</TouchableOpacity>
 					{/* 关于我们栏 */}
-					<TouchableOpacity onPress={() => this._goToFeedbackPage()}>
+					<TouchableOpacity onPress={() => this._goToAboutUsPage()}>
 						<View style={styles.sectionBox}>
 							<Image style={styles.sectionImg} source={require('./img/icon_us.png')}/>
 							<Text style={styles.sectionTitle}>关于我们</Text>
@@ -119,9 +126,26 @@ class SetUp extends Component {
 		});
 	}
 
+	// 检测 版本
+	_checkVersion() {
+		request.get(config.api.base + config.api.version)
+			.then(res => {
+				console.log(res);
+				if(config.version >= res.data.version){
+					Alert.alert('你的软件已经是最新版本')
+				}
+			})
+			.catch(e => console.log(e))
+	}
+
 	// 进入 意见反馈页
 	_goToFeedbackPage() {
 		this.props.navigation.navigate('Feedback');
+	}
+
+	// 进入 关于我们页
+	_goToAboutUsPage() {
+		this.props.navigation.navigate('AboutUs');
 	}
 
 	// 按钮：退出登录
@@ -159,6 +183,16 @@ const styles = StyleSheet.create({
 	sectionTitle: {
 		marginVertical: 15,
 		fontSize: 15
+	},
+	versionBox: {
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
+	version: {
+		marginRight: 18,
+		marginVertical: 15,
+		fontSize: 15
 	}
 })
 
@@ -172,7 +206,9 @@ const SetUpPage = StackNavigator(
 		ManageAddress: { screen: ManageAddress },
 		EditAddress: { screen: EditAddress },
 		// 意见反馈
-		Feedback: { screen: Feedback }
+		Feedback: { screen: Feedback },
+		// 关于我们
+		AboutUs: { screen: AboutUs }
 	},
 	{
 		headerMode: 'none'

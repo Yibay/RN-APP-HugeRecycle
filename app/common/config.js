@@ -40,9 +40,14 @@ export default {
 		// 查看 我的订单
 		myOrders: 'api/mobile/deal/myOrders',
 		// 查看 订单详情(根据path {id} 查询)
-		order: 'api/mobile/deal/order/'
+		order: 'api/mobile/deal/order/',
+		// 发送 客户反馈
+		createFeedback: 'api/mobile/deal/createFeedback',
+		// 获取 最新版本号
+		version: 'api/mobile/normal/version'
 	},
 	static: {
 		base: 'http://test.hugehuge.cn/web/'
-	}
+	},
+	version: 1.11
 }
