@@ -38,7 +38,7 @@ class Sidebar extends Component {
 		return (
 			<View>
 				<View style={styles.sidebarLogo}>
-					<Image style={styles.sidebarLogoImg} source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}}/>
+					<Image style={styles.sidebarLogoImg} source={require('./img/huge_logo.png')}/>
 					<Text>虎哥</Text>
 				</View>
 				<ScrollView><DrawerItems {...this.props} /></ScrollView>
@@ -54,8 +54,9 @@ const styles = StyleSheet.create({
 	},
 	sidebarLogoImg: {
 		marginBottom: 10,
-		width: 50,
-		height: 50
+		width: 70,
+		height: 70,
+		resizeMode: 'contain'
 	}
 });
 

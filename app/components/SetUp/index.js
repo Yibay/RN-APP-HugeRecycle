@@ -8,6 +8,8 @@ import { StackNavigator } from 'react-navigation';
 import SignIn from '../SignIn/index';
 import ManageAddress from '../ManageAddress/index';
 import EditAddress from '../EditAddress/index';
+import MyEnvRecord from '../MyEnvRecord/index';
+import MyOrder from '../MyOrder/index';
 import Header from '../common/header';
 
 
@@ -53,10 +55,12 @@ class SetUp extends Component {
 				<View style={ styles.container }>
 					<Header title='设置' navigation={this.props.navigation} goBack={() => this._goBack()} />
 					{/* 我的环保记录 */}
-					<View style={styles.sectionBox}>
-						<Image style={styles.sectionImg} source={require('./img/icon_record.png')}/>
-						<Text style={styles.sectionTitle}>我的环保记录</Text>
-					</View>
+					<TouchableOpacity onPress={() => this._goToMyEnvRecordPage()}>
+						<View style={styles.sectionBox}>
+							<Image style={styles.sectionImg} source={require('./img/icon_record.png')}/>
+							<Text style={styles.sectionTitle}>我的环保记录</Text>
+						</View>
+					</TouchableOpacity>
 					{/* 地址管理栏 */}
 					<TouchableOpacity onPress={() => this._goManageAddressPage()}>
 						<View style={styles.sectionBox}>
@@ -64,6 +68,28 @@ class SetUp extends Component {
 							<Text style={styles.sectionTitle}>地址管理</Text>
 						</View>
 					</TouchableOpacity>
+					{/* 检测更新栏 */}
+					<TouchableOpacity onPress={() => this._goManageAddressPage()}>
+						<View style={styles.sectionBox}>
+							<Image style={styles.sectionImg} source={require('./img/icon_update.png')}/>
+							<Text style={styles.sectionTitle}>检测更新</Text>
+						</View>
+					</TouchableOpacity>
+					{/* 意见反馈栏 */}
+					<TouchableOpacity onPress={() => this._goManageAddressPage()}>
+						<View style={styles.sectionBox}>
+							<Image style={styles.sectionImg} source={require('./img/icon_feedback.png')}/>
+							<Text style={styles.sectionTitle}>意见反馈</Text>
+						</View>
+					</TouchableOpacity>
+					{/* 关于我们栏 */}
+					<TouchableOpacity onPress={() => this._goManageAddressPage()}>
+						<View style={styles.sectionBox}>
+							<Image style={styles.sectionImg} source={require('./img/icon_us.png')}/>
+							<Text style={styles.sectionTitle}>关于我们</Text>
+						</View>
+					</TouchableOpacity>
+
 					{/* 登出模块 */}
 					<TouchableOpacity onPress={() => this._logOut()}>
 						<View style={styles.sectionBox}>
@@ -80,12 +106,9 @@ class SetUp extends Component {
 		this.props.navigation.navigate('虎哥回收');
 	}
 
-	// 按钮：退出登录
-	_logOut() {
-		console.log(this.props.navigation);
-		AsyncStorage.removeItem('X-AUTH-TOKEN')
-			// 抽屉导航中，跳转页面的方法
-			.then(() => this.props.navigation.navigate('虎哥回收'))
+	// 进入 我的环保记录
+	_goToMyEnvRecordPage(){
+		this.props.navigation.navigate('MyEnvRecord');
 	}
 
 	// 进入 地址管理页
@@ -93,6 +116,14 @@ class SetUp extends Component {
 		this.props.navigation.navigate('ManageAddress', {
 			token: this.state.token
 		});
+	}
+
+	// 按钮：退出登录
+	_logOut() {
+		console.log(this.props.navigation);
+		AsyncStorage.removeItem('X-AUTH-TOKEN')
+			// 抽屉导航中，跳转页面的方法
+			.then(() => this.props.navigation.navigate('虎哥回收'))
 	}
 }
 
@@ -124,7 +155,9 @@ const SetUpPage = StackNavigator(
 	{
 		SetUp: { screen: SetUp },
 		ManageAddress: { screen: ManageAddress },
-		EditAddress: { screen: EditAddress }
+		EditAddress: { screen: EditAddress },
+		MyEnvRecord: { screen: MyEnvRecord },
+		MyOrder: { screen: MyOrder }
 	},
 	{
 		headerMode: 'none'

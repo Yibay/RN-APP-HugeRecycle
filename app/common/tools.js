@@ -116,6 +116,7 @@ export function testAddressForm(formData){
 
 /* --- EditAddress 组件中 使用的工具函数 end --- */
 
+
 /* --- EditOrder 组件 和 ManageAddress 组件中 均有使用到 start --- */
 
 // 将地址obj 拼接成 一个 str
@@ -131,6 +132,38 @@ export function joinAddress(row){
 }
 
 /* --- EditOrder 组件 和 ManageAddress 组件中 均有使用到 end --- */
+
+
+/* --- MyOrder 组件中 使用 start --- */
+
+export function create8DigitNumber(num) {
+    // 若是 数字，则转成string
+    num = ''+ num;
+    // 不足8位数，补0补全8位
+    if(num.length <= 8){
+        num = '00000000'.substr(0, 8 - num.length) + num;
+    }
+    return num;
+}
+
+/* --- MyOrder 组件中 使用 end --- */
+
+
+export function timeFormatting(time) {
+    const date = new Date(time)
+    return date.getFullYear() + '-' + create2DigitNumber(date.getMonth() + 1) + '-' + date.getDate() + ' '
+            + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+}
+
+function create2DigitNumber(num) {
+    // 若是 数字，则转成string
+    num = ''+ num;
+    // 不足8位数，补0补全8位
+    if(num.length <= 2){
+        num = '00'.substr(0, 2 - num.length) + num;
+    }
+    return num;
+}
 
 
 // 数组去重函数
