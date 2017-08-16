@@ -121,7 +121,12 @@ class SetUp extends Component {
 	// 按钮：退出登录
 	_logOut() {
 		console.log(this.props.navigation);
-		AsyncStorage.removeItem('X-AUTH-TOKEN')
+		Promise.all([
+				AsyncStorage.removeItem('X-AUTH-TOKEN'),
+				AsyncStorage.removeItem('user_id'),
+				AsyncStorage.removeItem('user_name'),
+				AsyncStorage.removeItem('user_phone')
+			])
 			// 抽屉导航中，跳转页面的方法
 			.then(() => this.props.navigation.navigate('虎哥回收'))
 	}

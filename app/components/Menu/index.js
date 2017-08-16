@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Image, ScrollView } from 'react-native';
+import { StyleSheet, AsyncStorage, View, Text, Image, ScrollView } from 'react-native';
 
 import { DrawerNavigator, DrawerItems } from 'react-navigation';
 
 import RecycleListPage from '../RecycleList/index';
-import MyOrder from '../MyOrder/index';
+import MyOrderPage from '../MyOrderPage/index';
 import CustomerCenter from '../CustomerCenter/index';
 import SetUpPage from '../SetUp/index';
 
@@ -14,7 +14,7 @@ const Menu = DrawerNavigator(
 	{
 		// 默认 显示的 主页面 组件
 		'虎哥回收': { screen: RecycleListPage },
-		// '我的订单': { screen: MyOrder },
+		'我的订单': { screen: MyOrderPage },
 		// '个人中心': { screen: CustomerCenter },
 		'设置': { screen: SetUpPage }
 	},
@@ -34,16 +34,39 @@ const Menu = DrawerNavigator(
 
 // 侧边栏 （封装 抽屉 导航侧边栏 组件）
 class Sidebar extends Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			user_phone: '虎哥'
+		}
+	}
+
 	render() {
 		return (
 			<View>
 				<View style={styles.sidebarLogo}>
 					<Image style={styles.sidebarLogoImg} source={require('./img/huge_logo.png')}/>
-					<Text>虎哥</Text>
+					<Text>{this.state.user_phone}</Text>
 				</View>
 				<ScrollView><DrawerItems {...this.props} /></ScrollView>
 			</View>
 		)
+	}
+
+	componentDidMount(){
+		// 获取本地用户信息
+		AsyncStorage.getItem('user_phone')
+			.then(res => {
+				// 若 用户登录，则显示 用户电话
+				console.log(res);
+				if(res) {
+					this.setState({user_phone: res});
+				}
+			})
+			.catch(e => console.log(e))
+		AsyncStorage.getAllKeys()
+			.then(res => console.log(res));
 	}
 }
 

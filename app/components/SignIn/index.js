@@ -96,7 +96,12 @@ class SignIn extends Component {
 			console.log(res);
 			// 将 accessToken 存储在本地
 			if(res.data){
-				return AsyncStorage.setItem('X-AUTH-TOKEN', res.data['X-AUTH-TOKEN']);
+				return Promise.all([
+						AsyncStorage.setItem('X-AUTH-TOKEN', res.data['X-AUTH-TOKEN']),
+						AsyncStorage.setItem('user_id', (res.data.user.id).toString()),
+						AsyncStorage.setItem('user_name', res.data.user.name),
+						AsyncStorage.setItem('user_phone', (res.data.user.phone).toString())
+					]);
 			}
 		})
 		// 存储后，在从本地 读取 accessToken

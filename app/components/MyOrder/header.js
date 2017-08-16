@@ -9,8 +9,10 @@ class Header extends Component {
 	render() {
 		return(
 			<View style={styles.header}>
-				<Icon style={styles.back} name="md-arrow-back" size={30} onPress={this._goBack.bind(this)}/>
+				<Icon name="md-arrow-back" size={30} onPress={this._goBack.bind(this)}/>
 				<Text style={styles.headerText}>{this.props.title}</Text>
+				{/* 跳转至 地址编辑页 */}
+				<Text onPress={ () => this.props.goNextPage() } style={styles.add}>更多</Text>
 			</View>
 		)
 	}
@@ -31,22 +33,20 @@ class Header extends Component {
 
 const styles = StyleSheet.create({
 	header: {
-		position: 'relative',
-		paddingTop: 31,
-		paddingBottom: 11,
+		paddingTop: 25,
+		paddingBottom: 5,
 		paddingLeft: 12,
 		paddingRight: 12,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
 		alignItems: 'center',
 		backgroundColor: '#fff'
 	},
-	back: {
-		position: 'absolute',
-		zIndex: 100,
-		top: 25,
-		left: 12
-	},
 	headerText: {
 		fontSize: 20
+	},
+	add: {
+		fontSize: 17
 	}
 });
 
