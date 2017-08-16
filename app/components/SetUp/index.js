@@ -6,10 +6,11 @@ import { StackNavigator } from 'react-navigation';
 
 
 import SignIn from '../SignIn/index';
-import ManageAddress from '../ManageAddress/index';
-import EditAddress from '../EditAddress/index';
 import MyEnvRecord from '../MyEnvRecord/index';
 import MyOrder from '../MyOrder/index';
+import ManageAddress from '../ManageAddress/index';
+import EditAddress from '../EditAddress/index';
+import Feedback from '../Feedback/index';
 import Header from '../common/header';
 
 
@@ -69,21 +70,21 @@ class SetUp extends Component {
 						</View>
 					</TouchableOpacity>
 					{/* 检测更新栏 */}
-					<TouchableOpacity onPress={() => this._goManageAddressPage()}>
+					<TouchableOpacity onPress={() => this._goToFeedbackPage()}>
 						<View style={styles.sectionBox}>
 							<Image style={styles.sectionImg} source={require('./img/icon_update.png')}/>
 							<Text style={styles.sectionTitle}>检测更新</Text>
 						</View>
 					</TouchableOpacity>
 					{/* 意见反馈栏 */}
-					<TouchableOpacity onPress={() => this._goManageAddressPage()}>
+					<TouchableOpacity onPress={() => this._goToFeedbackPage()}>
 						<View style={styles.sectionBox}>
 							<Image style={styles.sectionImg} source={require('./img/icon_feedback.png')}/>
 							<Text style={styles.sectionTitle}>意见反馈</Text>
 						</View>
 					</TouchableOpacity>
 					{/* 关于我们栏 */}
-					<TouchableOpacity onPress={() => this._goManageAddressPage()}>
+					<TouchableOpacity onPress={() => this._goToFeedbackPage()}>
 						<View style={styles.sectionBox}>
 							<Image style={styles.sectionImg} source={require('./img/icon_us.png')}/>
 							<Text style={styles.sectionTitle}>关于我们</Text>
@@ -116,6 +117,11 @@ class SetUp extends Component {
 		this.props.navigation.navigate('ManageAddress', {
 			token: this.state.token
 		});
+	}
+
+	// 进入 意见反馈页
+	_goToFeedbackPage() {
+		this.props.navigation.navigate('Feedback');
 	}
 
 	// 按钮：退出登录
@@ -159,10 +165,14 @@ const styles = StyleSheet.create({
 const SetUpPage = StackNavigator(
 	{
 		SetUp: { screen: SetUp },
+		// 我的环保金记录 页面
+		MyEnvRecord: { screen: MyEnvRecord },
+		MyOrder: { screen: MyOrder },
+		// 地址管理 页面
 		ManageAddress: { screen: ManageAddress },
 		EditAddress: { screen: EditAddress },
-		MyEnvRecord: { screen: MyEnvRecord },
-		MyOrder: { screen: MyOrder }
+		// 意见反馈
+		Feedback: { screen: Feedback }
 	},
 	{
 		headerMode: 'none'

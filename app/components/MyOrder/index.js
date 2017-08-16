@@ -9,7 +9,7 @@ import config from '../../common/config';
 import { create8DigitNumber, timeFormatting } from '../../common/tools';
 
 import Header from '../common/header';
-import MoreHeader from './header';
+import HeaderLR from '../common/headerLR';
 
 
 class MyOrder extends Component {
@@ -108,8 +108,8 @@ class MyOrder extends Component {
 		// 从抽屉导航 进入，则显示 “更多”按钮
 		else {
 			return (
-				<MoreHeader title='我的订单' navigation={this.props.navigation}
-						goBack={() => this._goBack()} goNextPage={() => this._goNextPage()} />
+				<HeaderLR title='我的订单' rightButtonTxt='更多' navigation={this.props.navigation}
+						goBack={() => this._goBack()} rightButtonEvent={() => this._goNextPage()} />
 				);
 		}
 	}
