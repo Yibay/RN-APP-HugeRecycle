@@ -15,7 +15,8 @@ export default {
 		}
 	},
 	api: {
-		base: 'http://test.hugehuge.cn/',
+		// base: 'http://test.hugehuge.cn/',
+		base: 'http://www.hugehuge.cn/',
 		getProducts: 'api/mobile/normal/getProducts',
 		// 获取 短信验证码
 		getCode: 'mobile/auth/requestSmsCode',
@@ -44,7 +45,11 @@ export default {
 		// 发送 客户反馈
 		createFeedback: 'api/mobile/deal/createFeedback',
 		// 获取 最新版本号
-		version: 'api/mobile/normal/version'
+		version: 'api/mobile/normal/version',
+		// WebView 进入个人中心页面
+		userCenter: 'web/mobile/mall/user/index?code=',
+		// WebView 进入商城主页
+		shoppingMall: 'web/mobile/mall/index?code='
 	},
 	static: {
 		base: 'http://test.hugehuge.cn/web/'

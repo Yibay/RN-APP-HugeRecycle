@@ -26,7 +26,7 @@ class RecycleList extends Component {
 	    // drawerLabel: '虎哥回收',
 	    // 设置 Icon
 	    drawerIcon: ({ tintColor }) => (
-	    	<Icon name="md-sync" size={24} />
+	    	<Image style={{width: 20, height: 20, resizeMode: 'contain', marginLeft: 10}} source={require('./img/icon_recycle.png')} />
 	    ),
 	};
 

@@ -98,6 +98,7 @@ class SignIn extends Component {
 			if(res.data){
 				return Promise.all([
 						AsyncStorage.setItem('X-AUTH-TOKEN', res.data['X-AUTH-TOKEN']),
+						AsyncStorage.setItem('h5Code', res.data.h5Code),
 						AsyncStorage.setItem('user_id', (res.data.user.id).toString()),
 						AsyncStorage.setItem('user_name', res.data.user.name),
 						AsyncStorage.setItem('user_phone', (res.data.user.phone).toString())

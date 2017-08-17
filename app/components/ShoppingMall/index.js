@@ -7,7 +7,7 @@ import config from '../../common/config';
 import Header from '../common/headerLR';
 
 
-class CustomerCenter extends Component {
+class ShoppingMall extends Component {
 
 	// DrawerNavigator 导航 设置
 	// 侧边栏 DrawerItems 内，Icon, Label，在各 页面内 设置
@@ -16,11 +16,11 @@ class CustomerCenter extends Component {
 	    // drawerLabel: '虎哥回收',
 	    // 设置 Icon
 	    drawerIcon: ({ tintColor }) => (
-	    	<Image style={{width: 20, height: 20, resizeMode: 'contain', marginLeft: 10}} source={require('./img/person.png')} />
+	    	<Image style={{width: 20, height: 20, resizeMode: 'contain', marginLeft: 10}} source={require('./img/icon_shop2.png')} />
 	    ),
 	};
 
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.state = {
 			url: '',
@@ -30,7 +30,7 @@ class CustomerCenter extends Component {
 	}
 
 	render() {
-		return (
+		return(
 			<View style={styles.container}>
 				<Header title={this.state.title} navigation={this.props.navigation} goBack={() => this._goBack()}
 					rightButtonTxt='关闭' rightButtonImg={require('./img/close.png')} rightButtonEvent={() => this._close()} />
@@ -45,7 +45,7 @@ class CustomerCenter extends Component {
 		// 更新 url，刷新WebView 页面
 		AsyncStorage.getItem('h5Code').
 			then(code => this.setState({
-				url: config.api.base + config.api.userCenter + code
+				url: config.api.base + config.api.shoppingMall + code
 			}))
 			.catch(e => console.log(e))
 	}
@@ -55,15 +55,12 @@ class CustomerCenter extends Component {
 		if(this.state.url){
 			return(
 				<WebView ref='test' style={styles.container} source={{uri: this.state.url}}
-					// 在页面 加载前，向页面注入 javascript代码
-					// injectedJavaScript='window.postMessage(document.title);'
-					// 监听 收到页面传来的信息的事件
-					// onMessage={e => this.setState({title: e.nativeEvent.data})}
 					// 监听 页面状态变化改变的事件
 					onNavigationStateChange={e => this._onNavigationStateChange(e)} />
 			)
 		}
 	}
+
 	// 监听页面 变化，回调函数
 	_onNavigationStateChange(e) {
 		this.setState({
@@ -94,4 +91,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default CustomerCenter;
+export default ShoppingMall;

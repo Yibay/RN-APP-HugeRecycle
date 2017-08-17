@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, AsyncStorage, View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import { StackNavigator } from 'react-navigation';
 
 
@@ -33,7 +32,7 @@ class SetUp extends Component {
 	    // drawerLabel: '虎哥回收',
 	    // 设置 Icon
 	    drawerIcon: ({ tintColor }) => (
-	    	<Icon name='settings' size={24} />
+	    	<Image style={{width: 20, height: 20, resizeMode: 'contain', marginLeft: 10}} source={require('./img/icon_setting.png')} />
 	    ),
 	};
 
@@ -153,6 +152,7 @@ class SetUp extends Component {
 		console.log(this.props.navigation);
 		Promise.all([
 				AsyncStorage.removeItem('X-AUTH-TOKEN'),
+				AsyncStorage.removeItem('h5Code'),
 				AsyncStorage.removeItem('user_id'),
 				AsyncStorage.removeItem('user_name'),
 				AsyncStorage.removeItem('user_phone')

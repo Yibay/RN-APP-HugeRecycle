@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, AsyncStorage, View, Text, Image } from 'react-native';
 
-import Icon from 'react-native-vector-icons/Ionicons';
-
 
 import request from '../../common/request';
 import config from '../../common/config';
@@ -21,7 +19,7 @@ class MyOrder extends Component {
 	    // drawerLabel: '虎哥回收',
 	    // 设置 Icon
 	    drawerIcon: ({ tintColor }) => (
-	    	<Icon name="md-clipboard" size={24} />
+	    	<Image style={{width: 20, height: 20, resizeMode: 'contain', marginLeft: 10}} source={require('./img/icon_order_small.png')} />
 	    ),
 	};
 
