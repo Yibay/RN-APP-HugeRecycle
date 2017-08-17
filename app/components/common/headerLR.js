@@ -10,7 +10,7 @@ class HeaderLR extends Component {
 		return(
 			<View style={styles.header}>
 				<Icon name="md-arrow-back" size={30} onPress={this._goBack.bind(this)}/>
-				<Text style={styles.headerText}>{this.props.title}</Text>
+				<Text style={styles.headerText} numberOfLines={1}>{this.props.title}</Text>
 				{/* 跳转至 地址编辑页 */}
 				{this._renderRightButton(this.props.rightButtonTxt)}
 			</View>
@@ -64,6 +64,8 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff'
 	},
 	headerText: {
+		flex: 1,
+		textAlign: 'center',
 		fontSize: 20
 	},
 	rightButtonImg: {

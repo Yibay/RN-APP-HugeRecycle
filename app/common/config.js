@@ -49,7 +49,9 @@ export default {
 		// WebView 进入个人中心页面
 		userCenter: 'web/mobile/mall/user/index?code=',
 		// WebView 进入商城主页
-		shoppingMall: 'web/mobile/mall/index?code='
+		shoppingMall: 'web/mobile/mall/index?code=',
+		// 获取 发布信息列表
+		publish: 'mobile/artical/all'
 	},
 	static: {
 		base: 'http://test.hugehuge.cn/web/'
