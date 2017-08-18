@@ -10,6 +10,7 @@ import EditOrder from '../EditOrder/index';
 import ManageAddress from '../ManageAddress/index';
 import EditAddress from '../EditAddress/index';
 import Header from './header';
+import TelModal from './telModal';
 
 import request from '../../common/request';
 import config from '../../common/config';
@@ -39,19 +40,21 @@ class RecycleList extends Component {
 
 		this.state = {
 			dataSource: ds.cloneWithRows([]),
-			recycleList: []
+			recycleList: [],
+			modalVisible: false
 		}
 	}
 
 	render() {
 		return (
 			<View style={styles.container}>
-				<Header navigation={this.props.navigation} />
+				<Header navigation={this.props.navigation} dial={() => this.setState({modalVisible: true})} />
 				<ListView style={styles.list}
 					dataSource={this.state.dataSource}
 					renderRow={this._renderRow.bind(this)}
 					enableEmptySections={true}>
 				</ListView>
+				<TelModal modalVisible={this.state.modalVisible} closeModal={() => this.setState({modalVisible: false})} />
 			</View>
 		)
 	}
@@ -82,6 +85,7 @@ class RecycleList extends Component {
 		)
 	}
 
+	// 进入 分类页面
 	_goSortingPage(id){
 		this.props.navigation.navigate('Sorting', {
 			recycleList: this.state.recycleList, 

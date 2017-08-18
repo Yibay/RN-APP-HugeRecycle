@@ -11,7 +11,7 @@ class Header extends Component {
 			<View style={styles.header}>
 				<Icon name="md-menu" size={30} onPress={this._callMenu.bind(this)}/>
 				<Text style={styles.headerText}>虎哥回收</Text>
-				<Icon name="md-call" size={30} />
+				<Icon name="md-call" size={30} onPress={this.props.dial} />
 			</View>
 		)
 	}

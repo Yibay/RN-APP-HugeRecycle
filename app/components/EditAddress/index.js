@@ -16,7 +16,6 @@ class EditAddress extends Component {
 		super(props);
 		// 由编辑入口进入的 初始化表单信息
 		let formData = this.props.navigation.state.params.formData ? this.props.navigation.state.params.formData : {};
-		console.log(123123);
 		console.log(formData);
 		this.state = {
 			modalVisible: false,
