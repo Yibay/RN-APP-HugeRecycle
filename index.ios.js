@@ -4,11 +4,5 @@
  * @flow
  */
 
-import React from 'react';
-import { AppRegistry } from 'react-native';
-
-import Menu from './app/components/Menu/index';
-
-
-// 将入口 组件 挂载到 app入口
-AppRegistry.registerComponent('HugeRecycle', () => Menu);
+// 引入 真正的app入口文件
+import './app/index';
