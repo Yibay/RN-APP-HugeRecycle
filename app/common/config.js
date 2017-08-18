@@ -1,5 +1,6 @@
 
 export default {
+	// 封装 fetch get请求的请求头
 	getHeader: {
 		method: 'GET',
 		headers: {
@@ -7,6 +8,7 @@ export default {
 			'Content-Type': 'application/json'
 		}
 	},
+	// 封装 fetch post请求的请求头
 	postHeader: {
 		method: 'POST',
 		headers: {
@@ -14,9 +16,10 @@ export default {
 			'Content-Type': 'application/json'
 		}
 	},
+	// 请求 api接口
 	api: {
-		// base: 'http://test.hugehuge.cn/',
-		base: 'http://www.hugehuge.cn/',
+		base: 'http://test.hugehuge.cn/',
+		// base: 'http://www.hugehuge.cn/',
 		getProducts: 'api/mobile/normal/getProducts',
 		// 获取 短信验证码
 		getCode: 'mobile/auth/requestSmsCode',
@@ -53,8 +56,10 @@ export default {
 		// 获取 发布信息列表
 		publish: 'mobile/artical/all'
 	},
+	// 静态资源base路径
 	static: {
 		base: 'http://test.hugehuge.cn/web/'
 	},
+	// 版本号
 	version: 1.11
 }

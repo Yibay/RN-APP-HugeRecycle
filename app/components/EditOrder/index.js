@@ -9,7 +9,7 @@ import request from '../../common/request';
 import config from '../../common/config';
 import { joinAddress } from '../../common/tools';
 
-import SignIn from '../SignIn/index';
+import SignIn from '../../containers/SignIn/index';
 import Header from '../common/header';
 import Footer from './footer';
 

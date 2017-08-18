@@ -1,6 +1,7 @@
 import React from 'react';
 import { Alert } from 'react-native';
 
+
 /* --- RecycleList 组件中 使用的工具函数 start --- */
 
 // 将 请求回的数据，处理成 RecycleList 可以展示的 数据类型
@@ -136,6 +137,7 @@ export function joinAddress(row){
 
 /* --- MyOrder 组件中 使用 start --- */
 
+// 补全8位数
 export function create8DigitNumber(num) {
     // 若是 数字，则转成string
     num = ''+ num;
@@ -145,16 +147,13 @@ export function create8DigitNumber(num) {
     }
     return num;
 }
-
-/* --- MyOrder 组件中 使用 end --- */
-
-
+// 格式化时间 如：2017-08-18 15:16:27
 export function timeFormatting(time) {
     const date = new Date(time)
     return date.getFullYear() + '-' + create2DigitNumber(date.getMonth() + 1) + '-' + date.getDate() + ' '
             + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
 }
-
+// 补全2位数 函数
 function create2DigitNumber(num) {
     // 若是 数字，则转成string
     num = ''+ num;
@@ -164,6 +163,8 @@ function create2DigitNumber(num) {
     }
     return num;
 }
+
+/* --- MyOrder 组件中 使用 end --- */
 
 
 // 数组去重函数

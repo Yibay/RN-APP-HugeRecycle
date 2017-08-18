@@ -1,10 +1,19 @@
+/*
+ *  改变 redux state 的 userInfo（登录）
+ */
 import React, { Component, PropTypes } from 'react';
 import { StyleSheet, AsyncStorage, Dimensions, View, Text, Image, TextInput, Alert, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
 
+
+import { login } from '../../actions/login';
 
 import request from '../../common/request';
 import config from '../../common/config';
 
+
+// 将 actions打包成一个对象
+const actionCreators = { login };
 
 let { width, height } = Dimensions.get('window');
 class SignIn extends Component {
@@ -15,18 +24,18 @@ class SignIn extends Component {
 			phone: '',
 			code: ''
 		}
-		console.log(this.props);
 	}
 
 	render() {
+		console.log(this.props);
 		return (
 			<View style={styles.container}>
 				<Image style={styles.logo} source={require('./img/logo.png')} />
 				<View style={styles.form}>
 					<View>
-						<TextInput style={styles.tel} placeholder='请输入手机号' onChangeText={(text) => this._changeTel(text)} />
+						<TextInput style={styles.tel} placeholder='请输入手机号' onChangeText={(text) => this.setState({ phone: text })} />
 						<View style={styles.codeBox}>
-							<TextInput style={styles.code} placeholder='请输入验证码' onChangeText={(text) => this._changeCode(text)} />
+							<TextInput style={styles.code} placeholder='请输入验证码' onChangeText={(text) => this.setState({ code: text })} />
 							<Text style={styles.getCode} onPress={() => this._getCode()}>获取验证码</Text>
 						</View>
 					</View>
@@ -38,23 +47,23 @@ class SignIn extends Component {
 						</View>
 					</View>
 				</View>
-				<TouchableOpacity style={styles.closeBox} onPress={() => this.props.navigation.goBack()}>
+				<TouchableOpacity style={styles.closeBox} onPress={() => this._goBack()}>
 					<Image style={styles.close} source={require('./img/close.png')} />
 				</TouchableOpacity>
 			</View>
 		);
 	}
 
-	_changeTel(text) {
-		this.setState({
-			phone: text
-		});
-	}
-
-	_changeCode(text) {
-		this.setState({
-			code: text
-		});
+	// 回退函数
+	_goBack(){
+		// 若定制了 回退函数则执行回退函数
+		if(this.props.goBack) {
+			this.props.goBack();
+		}
+		// 否则 默认使用navigation.goBack
+		else {
+			this.props.navigation.goBack();
+		}
 	}
 
 	// 请求 短信验证码
@@ -101,7 +110,8 @@ class SignIn extends Component {
 						AsyncStorage.setItem('h5Code', res.data.h5Code),
 						AsyncStorage.setItem('user_id', (res.data.user.id).toString()),
 						AsyncStorage.setItem('user_name', res.data.user.name),
-						AsyncStorage.setItem('user_phone', (res.data.user.phone).toString())
+						AsyncStorage.setItem('user_phone', (res.data.user.phone).toString()),
+						this.props.login(res.data)
 					]);
 			}
 		})
@@ -215,4 +225,4 @@ SignIn.PropTypes = {
 	})
 }
 
-export default SignIn;
+export default connect(null, actionCreators)(SignIn);
