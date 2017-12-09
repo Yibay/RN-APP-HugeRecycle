@@ -10,6 +10,7 @@ import Publish from '../Publish/index';
 import CustomerCenter from '../CustomerCenter/index';
 import SetUpPage from '../SetUp/index';
 import Sidebar from '../../containers/Menu/sidebar';
+import BlueTooth from '../BlueTooth/index';
 
 
 // 抽屉 导航
@@ -21,7 +22,8 @@ const Menu = DrawerNavigator(
 		'虎哥商场': { screen: ShoppingMall },
 		'虎哥发布': { screen: Publish },
 		'个人中心': { screen: CustomerCenter },
-		'设置': { screen: SetUpPage }
+		'设置': { screen: SetUpPage },
+		'蓝牙': {screen: BlueTooth}
 	},
 	{
 		drawerWidth: 200,

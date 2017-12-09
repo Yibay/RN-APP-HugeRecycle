@@ -4,6 +4,7 @@ import React from 'react';
 import { AppRegistry } from 'react-native';
 import { Provider } from 'react-redux';
 
+
 // 引入 store对象
 import store from './store/index';
 // 引入 入口组件
